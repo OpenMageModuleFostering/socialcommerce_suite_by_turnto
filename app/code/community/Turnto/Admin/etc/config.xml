@@ -3,7 +3,7 @@
 <config>
     <modules>
         <Turnto_Admin>
-            <version>2.2.11</version>
+            <version>2.3.4</version>
         </Turnto_Admin>
     </modules> 
 
@@ -141,6 +141,13 @@
             <general>
                 <static_url>http://static.www.turnto.com</static_url>
                 <url>http://www.turnto.com</url>
+                <upc_attribute nil="true"/>
+                <mpn_attribute nil="true"/>
+                <isbn_attribute nil="true"/>
+                <ean_attribute nil="true"/>
+                <jan_attribute nil="true"/>
+                <asin_attribute nil="true"/>
+                <brand_attribute nil="true"/>
             </general>
         </turnto_admin>
     </default>   
@@ -156,7 +163,7 @@
             </turnto_products_ratings>
             <turnto_historical_orders_feed>
                 <schedule>
-                    <cron_expr>* * * * *</cron_expr>
+                    <cron_expr>0 1 * * *</cron_expr>
                 </schedule>
                 <run>
                     <model>turnto_admin/observer::pushHistoricalOrdersFeed</model>

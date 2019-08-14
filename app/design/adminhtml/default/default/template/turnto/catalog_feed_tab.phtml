@@ -1,27 +1,21 @@
 <h4>Catalog Feed</h4>
-<p style="width:650px">Go to your Settings in TurnTo Management area and enter:
+<p>Go to your Settings in the TurnTo Admin console and enter the following in the <b>Catalog Feed Url</b> input field:
 <br>
  <i><?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK) . 'turntocatalogfeed';?><?php if(count(Mage::registry('websites')) > 1) { ?>?websiteId=WEBSITE_ID<?php } ?><?php if(count(Mage::registry('stores')) > 1) { ?>&storeId=STORE_ID<?php } ?></i>
 <br>
+This will set up the automation of the catalog feed in order to keep you products up to date.
 <?php if(count(Mage::registry('stores')) > 1 || count(Mage::registry('websites'))) { ?>
-<b>NOTE: You appear to have multiple sites or stores on your magento installation so you will need to supply a scope in the URL.  Replace <i>WEBSITE_ID</i> and <i>STORE_ID</i> in the url above with the appropriate values from the drop-downs below (just the number. For instance: siteId=1)</b>
+<br>
+	<b>NOTE: You appear to have multiple sites or stores on your magento installation so you will need to supply a scope in the URL.  Replace <i>WEBSITE_ID</i> and <i>STORE_ID</i> in the url above with the appropriate values from the list below (just the number. For instance: websiteId=1&storeId=1)</b>
 <br>
 <?php } ?>
+</p>
 <br>
- in the <b>Catalog Feed Url:</b> input field.
-<br>
-<br>
- This will set up the automation of the catalog feed in order to keep you products up to date. </p>
-<br>
-<br>
-<br>
-To manually create a catalog feed press Generate to build a catalog feed. This feed can be downloaded and uploaded via the TurnTo management form.
 
-<br>
-<form id="cat_feed_form" name="cat_feed_form" method="post" action="<?php echo $this->getUrl('*/*/post') ?>">
-	<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
-	<input name="feed_type" type="hidden" value="catalog" />
-	<table>
+<!--<form id="cat_feed_form" name="cat_feed_form" method="post" action="--><?php //echo $this->getUrl('*/*/post') ?><!--">-->
+<!--	<input name="form_key" type="hidden" value="--><?php //echo Mage::getSingleton('core/session')->getFormKey() ?><!--" />-->
+<!--	<input name="feed_type" type="hidden" value="catalog" />-->
+<!--	<table>-->
 		<!--
 		<tr>
 			<td>Site Key:</td>
@@ -34,43 +28,44 @@ To manually create a catalog feed press Generate to build a catalog feed. This f
 		-->
 		<tr>
 		<?php
-			echo '<td>Website:</td>';
-                                echo '<td><select id="websiteId" name="websiteId">'; 
+			echo '<td>Websites:</td>';
+			echo '<ul>';
 			foreach (Mage::registry('websites') as $website) {
-				echo '<option value="'.$website->getId().'">'.$website->getId().': '.$website->getName().'</option>';
+				echo '<li>'.$website->getId().': '.$website->getName().'</li>';
 			}
-			echo '</select></td>'
+			echo '</ul></td>'
 		?>
 		</tr>
+		<tr><br /></tr>
 		<tr>
 			<?php
-			echo '<td>Store:</td>';
-			echo '<td><select id="storeId" name="storeId">';
+			echo '<td>Stores:</td>';
+			echo '<ul>';
 			foreach (Mage::registry('stores') as $store) {
-				echo '<option value="'.$store->getId().'">'.$store->getId().': '.$store->getName().'</option>';
+				echo '<li>'.$store->getId().': '.$store->getName().'</li>';
 			}
-			echo '</select></td>'
+			echo '</ul></td>'
 			?>
 		</tr>
-		<tr>
-			<td></td>
-			<td align="right">
-
-<input id="submit" name="submit" value="Generate" type="submit" /></td>
-
-		</tr>
+<!--		<tr>-->
+<!--			<td></td>-->
+<!--			<td align="right">-->
+<!---->
+<!--<input id="submit" name="submit" value="Generate" type="submit" /></td>-->
+<!---->
+<!--		</tr>-->
 	</table>
 
 
 
 
 	
-	<?php 
-		$file = Mage::getBaseDir('media') . DS . 'turnto/catfeed.csv';
-		
-		if(file_exists($file)){
-			echo '<br /><br /><a href="/media/turnto/catfeed.csv">Download catalog feed</a> - created '.date('m/d/Y G:i',filectime($file));
-		}
-	?>
+<!--	--><?php //
+//		$file = Mage::getBaseDir('media') . DS . 'turnto/catfeed.csv';
+//
+//		if(file_exists($file)){
+//			echo '<br /><br /><a href="/media/turnto/catfeed.csv">Download catalog feed</a> - created '.date('m/d/Y G:i',filectime($file));
+//		}
+//	?>
 </form>
 

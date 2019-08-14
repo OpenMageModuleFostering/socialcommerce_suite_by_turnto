@@ -1,7 +1,7 @@
 {
     "name": "OpenMageModuleFostering/socialcommerce_suite_by_turnto",
     "type": "magento-module",
-    "license": "TurnTo-Networks",
+    "license": "MIT",
     "homepage": "",
     "description": "Connect your shoppers to your customers",
     "authors": [
