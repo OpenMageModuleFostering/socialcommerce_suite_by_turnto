@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+
+<config>
+    <modules>
+        <Turnto_Admin>
+            <version>0.1.0</version>
+        </Turnto_Admin>
+    </modules> 
+
+    <global>
+        <blocks>
+            <adminblock1>
+            	<class>Turnto_Admin_Block</class>
+           	</adminblock1>  
+        </blocks>
+        <helpers>
+            <adminhelper1>
+                <class>Turnto_Admin_Helper</class>
+            </adminhelper1>
+        </helpers>  
+	</global>    
+	
+	<frontend>
+        <routers>
+            <turntocatfeed>
+                <use>standard</use>
+                <args>
+                    <module>Turnto_Admin</module>
+                    <frontName>turntocatalogfeed</frontName>
+                </args>
+            </turntocatfeed>
+        </routers>
+    </frontend>
+	
+	<admin>
+		<routers>
+		   <samplerouter1>
+                <use>admin</use>
+                <args>
+                    <module>Turnto_Admin_AdminControllers</module>
+                    <frontName>adminturnto</frontName>
+                    
+                    <modules>
+		         		<sintax after="Turnto_Admin_AdminControllers">Mage_Adminhtml</sintax>
+		       		</modules>
+                </args>
+		   </samplerouter1>		     
+	     </routers>    	
+	</admin>
+ 
+    <adminhtml>
+        <menu>
+             <menu1 translate="title" module="adminhelper1">
+                <title>TurnTo</title>
+                <sort_order>200</sort_order>
+                <children>
+                <!-- Note the misleading "module" attribute. 
+                	It actualy refers to one of the declared helpers -->
+                    <item1 translate="title" module="adminhelper1">
+                        <title>Integration</title>
+                        <action>samplerouter1/Turnto</action>
+                        <sort_order>1</sort_order>                        
+                    </item1>
+                    <item2 translate="title" module="adminhelper1">
+                        <title>Moderation</title>
+                        <action>samplerouter1/Turnto/redirect</action>
+                        <sort_order>2</sort_order>                        
+                    </item2>
+                    <item3 translate="title" module="adminhelper1">
+                        <title>Reporting</title>
+                        <action>samplerouter1/Turnto/redirect</action>
+                        <sort_order>3</sort_order>                        
+                    </item3>   
+				</children>
+             </menu1>
+        </menu>
+	</adminhtml>    
+    
+</config>
