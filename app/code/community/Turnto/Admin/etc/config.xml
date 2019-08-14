@@ -3,7 +3,7 @@
 <config>
     <modules>
         <Turnto_Admin>
-            <version>2.3.4</version>
+            <version>3.0.5</version>
         </Turnto_Admin>
     </modules> 
 
@@ -141,6 +141,10 @@
             <general>
                 <static_url>http://static.www.turnto.com</static_url>
                 <url>http://www.turnto.com</url>
+                <image_store_base>wac.edgecastcdn.net/001A39/prod</image_store_base>
+                <static_cache_time>900</static_cache_time>
+                <teaser_cache_time>900</teaser_cache_time>
+                <version>4.3</version>
                 <upc_attribute nil="true"/>
                 <mpn_attribute nil="true"/>
                 <isbn_attribute nil="true"/>
@@ -149,6 +153,85 @@
                 <asin_attribute nil="true"/>
                 <brand_attribute nil="true"/>
             </general>
+            <checkoutcomments>
+                <checkoutcomments_enabled>1</checkoutcomments_enabled>
+            </checkoutcomments>
+            <qa>
+                <qa_setup_type>overlay</qa_setup_type>
+                <qa_teaser_custom_enabled>1</qa_teaser_custom_enabled>
+                <qa_teaser_custom><![CDATA[
+<script type="text/javascript">
+  /**
+   *
+   * This is a way to implement a teaser function that returns the html of the actual teaser.
+   * This is called with the parameter TurnToItemData, which contains the item counts.
+   * The clicks are calling clickQaTabFromTeaser() in this example.
+   *
+   */
+   function itemTeaserDisplay(data) {
+        var iteaserhtml = '<h2>Get FAST answers from customers</h2><a class="TurntoItemTeaserClick" href="javascript:clickQaTabFromTeaser()">Ask a Question</a>';
+        iteaserhtml += '<div id="TT2ILTcount-line">';
+        if (data.counts.q > 0 || data.counts.a > 0) {
+           iteaserhtml += '<p><a class="TurntoItemTeaserClick TurnToIteaSee" href="javascript:clickQaTabFromTeaser()">See ';
+           if (data.counts.q > 0) {
+               iteaserhtml += '<strong>' + data.counts.q + '</strong>' + (data.counts.q > 1 ? ' questions' : ' question');
+           }
+           if (data.counts.a > 0) {
+               iteaserhtml += ' <strong>' + data.counts.a + '</strong>' + (data.counts.a > 1 ? ' answers' : ' answer');
+           }
+           iteaserhtml += '</a></p>';
+        }
+        iteaserhtml += '</div>';
+        return iteaserhtml;
+   }
+
+   // todo: this should handle opening the tab if Q&A is under a tab.
+   function clickQaTabFromTeaser() {
+       var qa = TurnTojQuery('#TurnToContent')
+       window.scrollTo(0,qa.offset().top);
+   }
+</script>
+                ]]></qa_teaser_custom>
+                <qa_teaser_custom_function_name>itemTeaserDisplay</qa_teaser_custom_function_name>
+            </qa>
+            <reviews>
+                <reviews_setup_type>overlay</reviews_setup_type>
+                <reviews_teaser_custom_enabled>1</reviews_teaser_custom_enabled>
+                <reviews_teaser_custom><![CDATA[
+<script type="text/javascript">
+    /**
+     *
+     *
+     */
+    function reviewsItemTeaserDisplay(clazz, data) {
+        var clazzNam = clazz || "TurnToReviewsTeaser";
+
+        var iteasers = TurnTojQuery("." + clazzNam);
+
+        // round the average rating to the nearest tenth
+        var rating = Math.round((TurnToItemData.counts.ar + 0.25) * 100.0) / 100.0;
+        rating = rating.toString();
+        var decimal = parseInt(rating.substring(2, 3))
+        rating = rating.substring(0, 1) + "-" + (decimal >= 5 ? '5' : '0')
+
+        iteasers.html(TurnToHTML.reviewTeaser({rating: rating}));
+
+        //if in multi-sku page, TurnToItemData.sku is defined
+        var teaserSku = TurnToItemData.sku;
+
+        iteasers.find('.TTreadReviews').click(function() {clickReviewsTabFromTeaser();});
+        iteasers.find('.TTwriteReview').click(function(){clickReviewsTabFromTeaser();TurnTo.writeReview();});
+    }
+
+    // todo: this should handle opening the tab if reviews are under a tab AND scrolling to the content
+    function clickReviewsTabFromTeaser() {
+        var rev = TurnTojQuery('#TurnToReviewsContent')
+        window.scrollTo(0,rev.offset().top);
+    }
+</script>
+                ]]></reviews_teaser_custom>
+                <reviews_teaser_custom_function_name>reviewsItemTeaserDisplay</reviews_teaser_custom_function_name>
+            </reviews>
         </turnto_admin>
     </default>   
     <crontab>

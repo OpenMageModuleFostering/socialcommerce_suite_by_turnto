@@ -1,28 +1,29 @@
 <?php
-class Turnto_Login_IndexController extends Mage_Core_Controller_Front_Action {
-	public function indexAction()
-        {
-                $this->loadLayout();
 
-		$this->renderLayout();
-        }
+class Turnto_Login_IndexController extends Mage_Core_Controller_Front_Action
+{
+    public function indexAction()
+    {
+        $this->loadLayout();
 
-        public function regAction()
-        {
-                $this->loadLayout();
+        $this->renderLayout();
+    }
 
-                $this->renderLayout();
-        }
+    public function regAction()
+    {
+        $this->loadLayout();
 
-
-	public function successAction()
-        {
-        	echo '<html><head></head><body><script type="text/javascript">parent.TurnTo.localAuthenticationComplete();</script><h3>Loading...</h3></body></html>';
-	}
+        $this->renderLayout();
+    }
 
 
+    public function successAction()
+    {
+        echo '<html><head></head><body><script type="text/javascript">parent.TurnTo.localAuthenticationComplete();</script><h3>Loading...</h3></body></html>';
+    }
 
-   /**
+
+    /**
      * Retrieve customer session model object
      *
      * @return Mage_Customer_Model_Session
@@ -33,7 +34,7 @@ class Turnto_Login_IndexController extends Mage_Core_Controller_Front_Action {
     }
 
 
-   /**
+    /**
      * Login post action
      */
     public function loginAction()
@@ -42,10 +43,10 @@ class Turnto_Login_IndexController extends Mage_Core_Controller_Front_Action {
 
         //$this->getResponse()->setHeader('Content-Type', 'application/json');
 
-	if ($this->_getSession()->isLoggedIn()) {
-             //$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
-             $this->_redirectSuccess(Mage::getUrl('*/*/success', array('_secure'=>false)));
-	     return;
+        if ($this->_getSession()->isLoggedIn()) {
+            //$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+            $this->_redirectSuccess(Mage::getUrl('*/*/success', array('_secure' => false)));
+            return;
         }
         $session = $this->_getSession();
 
@@ -57,8 +58,8 @@ class Turnto_Login_IndexController extends Mage_Core_Controller_Front_Action {
                     if ($session->getCustomer()->getIsJustConfirmed()) {
                         $this->_welcomeCustomer($session->getCustomer(), true);
                     }
-                    $this->_redirectSuccess(Mage::getUrl('*/*/success', array('_secure'=>false)));
-		    return;
+                    $this->_redirectSuccess(Mage::getUrl('*/*/success', array('_secure' => false)));
+                    return;
                 } catch (Mage_Core_Exception $e) {
                     switch ($e->getCode()) {
                         case Mage_Customer_Model_Customer::EXCEPTION_EMAIL_NOT_CONFIRMED:
@@ -72,7 +73,7 @@ class Turnto_Login_IndexController extends Mage_Core_Controller_Front_Action {
                             break;
                         default:
                             //$result["error"] = 1;
-			    $message = $e->getMessage();
+                            $message = $e->getMessage();
                     }
                     $session->addError($message);
                     $session->setUsername($login['username']);
@@ -80,7 +81,7 @@ class Turnto_Login_IndexController extends Mage_Core_Controller_Front_Action {
                     // Mage::logException($e); // PA DSS violation: this exception log can disclose customer password
                 }
             } else {
-		//$result["error"] = 1;
+                //$result["error"] = 1;
                 $session->addError($this->__('Login and password are required.'));
             }
         }
@@ -92,9 +93,9 @@ class Turnto_Login_IndexController extends Mage_Core_Controller_Front_Action {
 
     public function getUserStatusAction()
     {
-       $session = Mage::getSingleton('customer/session');
-       $this->getResponse()->setHeader('Content-Type', 'application/json');
-       if($session->isLoggedIn()) {
+        $session = Mage::getSingleton('customer/session');
+        $this->getResponse()->setHeader('Content-Type', 'application/json');
+        if ($session->isLoggedIn()) {
             $customer = $session->getCustomer();
             $result = array();
 
@@ -104,14 +105,14 @@ class Turnto_Login_IndexController extends Mage_Core_Controller_Front_Action {
             $result['email'] = $customer->getEmail();
             $result['email_confirmed'] = true;
             $result['nickname'] = null;
-       } else {
-           $result['error'] = "User is logged out";
-       }
+        } else {
+            $result['error'] = "User is logged out";
+        }
 
-       $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
-   }
+        $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+    }
 
-   /**
+    /**
      * Customer logout action
      */
     public function logoutAction()
@@ -158,8 +159,8 @@ class Turnto_Login_IndexController extends Mage_Core_Controller_Front_Action {
                 $addressForm->setFormCode('customer_register_address')
                     ->setEntity($address);
 
-                $addressData    = $addressForm->extractData($this->getRequest(), 'address', false);
-                $addressErrors  = $addressForm->validateData($addressData);
+                $addressData = $addressForm->extractData($this->getRequest(), 'address', false);
+                $addressErrors = $addressForm->validateData($addressData);
                 if ($addressErrors === true) {
                     $address->setId(null)
                         ->setIsDefaultBilling($this->getRequest()->getParam('default_billing', false))
@@ -179,7 +180,7 @@ class Turnto_Login_IndexController extends Mage_Core_Controller_Front_Action {
             try {
                 $customerErrors = $customerForm->validateData($customerData);
                 if ($customerErrors !== true) {
-		    $errors = array_merge($customerErrors, $errors);
+                    $errors = array_merge($customerErrors, $errors);
                 } else {
                     $customerForm->compactData($customerData);
                     $customer->setPassword($this->getRequest()->getPost('password'));
@@ -198,29 +199,29 @@ class Turnto_Login_IndexController extends Mage_Core_Controller_Front_Action {
                     if ($customer->isConfirmationRequired()) {
                         $customer->sendNewAccountEmail('confirmation', $session->getBeforeAuthUrl());
                         $session->addSuccess($this->__('Account confirmation is required. Please, check your email for the confirmation link. To resend the confirmation email please <a href="%s">click here</a>.', Mage::helper('customer')->getEmailConfirmationUrl($customer->getEmail())));
-                        $this->_redirectSuccess(Mage::getUrl('*/*/success', array('_secure'=>false)));
-			//$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+                        $this->_redirectSuccess(Mage::getUrl('*/*/success', array('_secure' => false)));
+                        //$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
                         return;
                     } else {
                         $session->setCustomerAsLoggedIn($customer);
                         //$url = $this->_welcomeCustomer($customer);
                         //$this->_redirectSuccess($url);
-                        $this->_redirectSuccess(Mage::getUrl('*/*/success', array('_secure'=>false)));
-			//$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
-			return;
+                        $this->_redirectSuccess(Mage::getUrl('*/*/success', array('_secure' => false)));
+                        //$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+                        return;
                     }
                 } else {
                     $session->setCustomerFormData($this->getRequest()->getPost());
                     if (is_array($errors)) {
                         foreach ($errors as $errorMessage) {
-			   $session->addError($errorMessage);
+                            $session->addError($errorMessage);
                         }
                     } else {
                         $session->addError($this->__('Invalid customer data'));
                     }
                 }
             } catch (Mage_Core_Exception $e) {
-		$session->setCustomerFormData($this->getRequest()->getPost());
+                $session->setCustomerFormData($this->getRequest()->getPost());
                 if ($e->getCode() === Mage_Customer_Model_Customer::EXCEPTION_EMAIL_EXISTS) {
                     $url = Mage::getUrl('customer/account/forgotpassword');
                     $message = $this->__('There is already an account with this email address. If you are sure that it is your email address, <a href="%s">click here</a> to get your password and access your account.', $url);
@@ -235,7 +236,7 @@ class Turnto_Login_IndexController extends Mage_Core_Controller_Front_Action {
             }
         }
 
-	//$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+        //$this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
         $this->_redirectError(Mage::getUrl('*/*/reg', array('_secure' => true)));
     }
 }

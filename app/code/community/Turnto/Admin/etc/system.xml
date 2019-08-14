@@ -49,6 +49,16 @@
                             <show_in_store>1</show_in_store>
                             <validate>required-entry</validate>
                         </site_auth>
+                        <version>
+                            <label>Version</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>35</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>required-entry</validate>
+                            <comment>TurnTo version. Default is 4.3.  Should be in the (major).(minor) form.  Examples: 4.0, 4.1, 4.2, etc...</comment>
+                        </version>
                         <static_url>
                             <label>Static URL</label>
                             <frontend_type>text</frontend_type>
@@ -69,6 +79,40 @@
                             <validate>required-entry</validate>
                             <comment>Default is http://www.turnto.com. Should not ever be changed, unless instructed by TurnTo.</comment>
                         </url>
+                        <image_store_base>
+                            <label>Image Store Base</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>required-entry</validate>
+                            <comment>Default is wac.edgecastcdn.net/001A39/prod. Should not ever be changed, unless instructed by TurnTo.</comment>
+                        </image_store_base>
+                        <static_cache_time>
+                            <label>Static Content Cache Time</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number</validate>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>This setting only applies when using a Setup Type of Static Embed. Value is in
+                                seconds. Default is 900 (15 minutes).
+                            </comment>
+                        </static_cache_time>
+                        <teaser_cache_time>
+                            <label>Teaser Cache Time</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number</validate>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>The amount of time to cache the TurnTo teasers. Value is in seconds. Default is 900
+                                (15 minutes)
+                            </comment>
+                        </teaser_cache_time>
                         <!-- UPC -->
                         <upc_attribute>
                             <label>UPC Attribute</label>
@@ -141,6 +185,152 @@
                         </brand_attribute>
                     </fields>
                 </general>
+                <checkoutcomments>
+                    <label>TurnTo Checkout Comments Configuration</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>2</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <checkoutcomments_enabled>
+                            <label>Enabled Checkout Comments</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </checkoutcomments_enabled>
+                    </fields>
+                </checkoutcomments>
+                <qa>
+                    <label>TurnTo Q&amp;A Configuration</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>3</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <qa_setup_type>
+                            <label>Q&amp;A Setup Type</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>Turnto_Admin_Block_Adminhtml_System_Config_Setuptype</source_model>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </qa_setup_type>
+                        <qa_teaser_custom_enabled>
+                            <label>Use Custom Q&amp;A Teaser</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>105</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </qa_teaser_custom_enabled>
+                        <qa_teaser_custom translate="label comment">
+                            <label>Custom Q&amp;A teaser function definition</label>
+                            <comment>
+                                <![CDATA[Place custom javascript here to be used as the custom Q&amp;A teaser function. Should be surrounded in a &lt;script&gt; tag]]></comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <qa_teaser_custom_enabled>1</qa_teaser_custom_enabled>
+                            </depends>
+                        </qa_teaser_custom>
+                        <qa_teaser_custom_function_name>
+                            <label>Custom Q&amp;A teaser function name</label>
+                            <comment>The name of the function defined in the "Custom Q&amp;A teaser function code"
+                                field
+                            </comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <qa_teaser_custom_enabled>1</qa_teaser_custom_enabled>
+                            </depends>
+                        </qa_teaser_custom_function_name>
+                    </fields>
+                </qa>
+                <reviews>
+                    <label>Turnto Reviews Configuration</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>4</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <reviews_setup_type>
+                            <label>Reviews Setup Type</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>Turnto_Admin_Block_Adminhtml_System_Config_Setuptype</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </reviews_setup_type>
+                        <reviews_teaser_custom_enabled>
+                            <label>Use Custom Reviews Teaser</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>125</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </reviews_teaser_custom_enabled>
+                        <reviews_teaser_custom translate="label comment">
+                            <label>Custom reviews teaser function definition</label>
+                            <comment><![CDATA[Place custom javascript here to be used as the custom Reviews teaser function. Should be surrounded in a &lt;script&gt; tag]]></comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><reviews_teaser_custom_enabled>1</reviews_teaser_custom_enabled></depends>
+                        </reviews_teaser_custom>
+                        <reviews_teaser_custom_function_name>
+                            <label>Custom Reviews teaser function name</label>
+                            <comment>The name of the function defined in the "Custom reviews teaser function definition" field</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><reviews_teaser_custom_enabled>1</reviews_teaser_custom_enabled></depends>
+                        </reviews_teaser_custom_function_name>
+                    </fields>
+                </reviews>
+                <mobileconfig>
+                    <label>Turnto Mobile Configuration</label>
+                    <comment><![CDATA[The default mobile landing page URL is &lt;baseurl&gt;/turntomobile]]></comment>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <title translate="label">
+                            <label>Mobile Landing Page Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <validate>required-entry</validate>
+                        </title>
+                    </fields>
+                </mobileconfig>
                 <feedconfig translate="label" >
                     <label>Turnto Feed Configuration</label>
                     <frontend_type>text</frontend_type>

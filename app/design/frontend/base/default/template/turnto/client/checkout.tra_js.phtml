@@ -1,0 +1,50 @@
+<?php if(Mage::getStoreConfig('turnto_admin/checkoutcomments/checkoutcomments_enabled') == 1) : ?>
+<?php $helper = Mage::helper('turnto_client_helper/data'); ?>
+<script type="text/javascript">
+    // turnto extension
+    var turnToConfig = {
+        siteKey: "<?php echo Mage::getStoreConfig('turnto_admin/general/site_key'); ?>",
+        host: "<?php echo $helper->getHostWithoutProtocol(); ?>",
+        staticHost: "<?php echo $helper->getStaticHostWithoutProtocol(); ?>",
+        postPurchaseFlow:true
+    };
+</script>
+
+<script type="text/javascript" src="//<?php echo $helper->getStaticHostWithoutProtocol(); ?>/tra<?php echo $helper->getVersionForPath()?>/turntoFeed.js"></script>
+<script type="text/javascript" src="//<?php echo $helper->getStaticHostWithoutProtocol(); ?>/traServer<?php echo $helper->getVersionForPath()?>/trajs/<?php echo Mage::getStoreConfig('turnto_admin/general/site_key'); ?>/tra.js"></script>
+
+<?php
+$TTorderId = Mage::getSingleton('checkout/type_onepage')->getCheckout()->getLastOrderId();
+$TTorder = Mage::getModel('sales/order')->load($TTorderId);
+$TTemail = $TTorder->getCustomerEmail();
+$TTcustomerId = Mage::getSingleton('customer/session')->getCustomerId();
+$TTaddress = Mage::getModel('sales/order_address')->load($TTorder->billing_address_id);
+$TTfirstName = $TTaddress->getFirstname();
+$TTlastName = $TTaddress->getLastname();
+$TTpostalCode = $TTaddress->getPostcode();
+?>
+
+<script type="text/javascript">
+    <?php
+    echo 'var deliveryDate = new Date();';
+    echo 'deliveryDate.setDate(deliveryDate.getDate() + 30);';
+    echo 'TurnToFeed.addFeedPurchaseOrder({orderId:"'.$TTorderId.'",email:"'.$TTemail.'",postalCode: "'.$TTpostalCode.'",firstName: "'.$TTfirstName.'", lastName: "'.$TTlastName.'", "deliveryDate": deliveryDate });';
+
+    foreach ($TTorder->getAllItems() as $item) {
+       $TTproduct = Mage::getModel('catalog/product')->load($item->getProductId());
+       $TTparents = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($TTproduct->getId());
+       if(isset($TTparents[0]))
+       {
+           // skip products with a parent, they are in the feed separately
+           continue;
+       }
+       $TTurl= Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) . 'index.php/' . $TTproduct->getUrlPath();
+       $TTimageUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) . 'media/catalog/product'.$TTproduct->getImage();
+       echo 'TurnToFeed.addFeedLineItem({title: "'.$this->escapeHtml($TTproduct->getName()).'", url: "'.$TTurl.'",sku:"'.$this->escapeHtml($TTproduct->getSku()).'", price:"'.$this->escapeHtml($TTproduct->getPrice()).'",itemImageUrl:"'.$this->escapeHtml($TTimageUrl).'"});';
+    }
+
+
+    ?>
+    TurnToFeed.sendFeed();
+</script>
+<?php endif; ?>

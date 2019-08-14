@@ -180,7 +180,7 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
             if (!$attributeText) {
                 $attributeText = $product->getData($code);
             }
-            if ($attributeText != null) {
+            if ($attributeText != null && strcasecmp($attributeText, 'NULL') != 0) {
                 return $attributeText;
             }
         }

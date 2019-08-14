@@ -1,0 +1,43 @@
+<!-- custom teaser code-->
+<?php if (intval(Mage::getStoreConfig('turnto_admin/qa/qa_teaser_custom_enabled')) == 1): ?>
+<?php echo Mage::getStoreConfig('turnto_admin/qa/qa_teaser_custom') ?>
+<?php endif; ?>
+
+<?php if (intval(Mage::getStoreConfig('turnto_admin/reviews/reviews_teaser_custom_enabled')) == 1): ?>
+<?php echo Mage::getStoreConfig('turnto_admin/reviews/reviews_teaser_custom') ?>
+<?php endif; ?>
+
+<script type="text/javascript">
+    <?php
+        $helper = Mage::helper('turnto_client_helper/data');
+        $TTSKU = $helper->getSku();
+    ?>
+
+    var turnToConfig = {
+        siteKey: "<?php echo Mage::getStoreConfig('turnto_admin/general/site_key'); ?>",
+        host: "<?php echo $helper->getHostWithoutProtocol(); ?>",
+        staticHost: "<?php echo $helper->getStaticHostWithoutProtocol(); ?>",
+        //imageStoreBase: 'wac.edgecastcdn.net/001A39/qa',
+        setupType: "<?php echo Mage::getStoreConfig('turnto_admin/qa/qa_setup_type') ?>",
+        reviewsSetupType: "<?php echo Mage::getStoreConfig('turnto_admin/reviews/reviews_setup_type') ?>"
+        <?php if (intval(Mage::getStoreConfig('turnto_admin/qa/qa_teaser_custom_enabled')) == 1): ?>
+        ,iTeaserFunc: <?php echo Mage::getStoreConfig('turnto_admin/qa/qa_teaser_custom_function_name'); ?>
+        <?php endif; ?>
+        <?php if (intval(Mage::getStoreConfig('turnto_admin/reviews/reviews_teaser_custom_enabled')) == 1): ?>
+        ,reviewsTeaserFunc: <?php echo Mage::getStoreConfig('turnto_admin/reviews/reviews_teaser_custom_function_name'); ?>
+        <?php endif; ?>
+    };
+    (function () {
+        var tt = document.createElement('script');
+        tt.type = 'text/javascript';
+        tt.async = true;
+        tt.src = "<?php echo Mage::getStoreConfig('turnto_admin/general/static_url')?>/traServer<?php echo $helper->getVersionForPath()?>/trajs/" + turnToConfig.siteKey + "/tra.js";
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(tt, s);
+    })();
+
+    var TurnToItemSku = "<?php echo $TTSKU ?>";
+</script>
+
+<script type="text/javascript" src="<?php echo Mage::getStoreConfig('turnto_admin/general/static_url')?>/sitedata/<?php echo Mage::getStoreConfig('turnto_admin/general/site_key'); ?>/v4_2/<?php echo $TTSKU?>/d/itemjs"></script>
+

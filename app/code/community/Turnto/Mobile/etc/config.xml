@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<config>
+    <modules>
+        <Turnto_Mobile>
+            <version>3.0.5</version>
+        </Turnto_Mobile>
+    </modules>
+
+    <global>
+        <blocks>
+            <turnto_mobile_block>
+                <class>Turnto_Mobile_Block</class>
+            </turnto_mobile_block>
+        </blocks>
+        <helpers>
+            <turnto_mobile_helper>
+                <class>Turnto_Mobile_Helper</class>
+            </turnto_mobile_helper>
+        </helpers>
+    </global>
+
+    <frontend>
+        <routers>
+            <turnto_mobile>
+                <use>standard</use>
+                <args>
+                    <module>Turnto_Mobile</module>
+                    <frontName>turntomobile</frontName>
+                </args>
+            </turnto_mobile>
+        </routers>
+        <layout>
+            <updates>
+                <turnto_mobile>
+                    <file>turnto_mobile.xml</file>
+                </turnto_mobile>
+            </updates>
+        </layout>
+    </frontend>
+</config>
