@@ -30,7 +30,14 @@ class Turnto_Admin_Block_ShowTabsAdminBlock extends Mage_Adminhtml_Block_Widget_
             'title'     => Mage::helper('adminhelper1')->__('Historical Feed'),
             'content'   => $this->getLayout()->createBlock("adminblock1/HistoricalFeed")->toHtml(),
             'active'    => false
-        ));    
+        ));
+
+        $this->addTab('turnto_ratings_feed_tab', array(
+            'label'     => Mage::helper('adminhelper1')->__('Product Ratings Feed'),
+            'title'     => Mage::helper('adminhelper1')->__('Product Ratings Feed'),
+            'content'   => $this->getLayout()->createBlock("adminblock1/RatingsFeed")->toHtml(),
+            'active'    => false
+        ));     
 
 		$headBlock = $this->getLayout()->getBlock('head');
 		$headBlock->addItem('css', 'calendar/calender-win2k-1.css');

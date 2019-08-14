@@ -3,7 +3,7 @@
 <config>
     <modules>
         <Turnto_Admin>
-            <version>2.1.5</version>
+            <version>2.2.0</version>
         </Turnto_Admin>
     </modules> 
 
@@ -11,13 +11,39 @@
         <blocks>
             <adminblock1>
             	<class>Turnto_Admin_Block</class>
-           	</adminblock1>  
+           	</adminblock1> 
+            <review>
+                <rewrite>
+                    <helper>Turnto_Admin_Block_Review_Helper</helper>
+                </rewrite>
+            </review> 
         </blocks>
         <helpers>
             <adminhelper1>
                 <class>Turnto_Admin_Helper</class>
             </adminhelper1>
-        </helpers>  
+        </helpers> 
+        <models>
+            <turnto_admin>
+                <class>Turnto_Admin_Model</class>
+                <resourceModel>turnto_admin_resource</resourceModel>
+            </turnto_admin>
+            <turnto_admin_resource>
+                <class>Turnto_Admin_Model_Resource</class>
+                <entities>
+                    <rating>
+                        <table>turnto_products_ratings</table>
+                    </rating>
+                 </entities>
+            </turnto_admin_resource>
+        </models> 
+        <resources>
+            <turnto_admin_setup>
+                <setup>
+                    <module>Turnto_Admin</module>
+                </setup>
+            </turnto_admin_setup>
+        </resources>   
 	</global>    
 	
 	<frontend>
@@ -81,6 +107,46 @@
 				</children>
              </menu1>
         </menu>
-	</adminhtml>    
-    
+         <acl>
+         <resources>
+            <all>
+               <title>Allow Everything</title>
+            </all>
+            <admin>
+               <children>
+                       <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <turnto_admin>
+                                            <title>Turnto Products Ratings</title>
+                                        </turnto_admin>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>                  
+               </children>
+            </admin>
+         </resources>
+      </acl>
+	</adminhtml> 
+    <default>
+        <turnto_admin>
+            <feedconfig>
+                <url>http://static.www.turnto.com/static/export/</url>
+            </feedconfig>           
+        </turnto_admin>
+    </default>   
+    <crontab>
+        <jobs>
+            <turnto_products_ratings>
+                <schedule>
+                    <cron_expr>0 4 * * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>turnto_admin/observer::getProductsRatingsFeed</model>
+                </run>
+            </turnto_products_ratings>
+        </jobs>
+    </crontab>
 </config>

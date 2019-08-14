@@ -1,0 +1,47 @@
+<h4>Product Ratings Feed</h4>
+<p style="margin-top:10px;width:600px">
+
+ 
+Instructions here for the Product Ratings (to change content in this section, update file: app/design/adminhtml/default/default/template/turnto/product_ratings_feed_tab.phtml)
+<br>
+<br>
+
+</p>
+
+<?php $_helper = Mage::helper('adminhelper1') ?>
+
+<?php if($_helper->isFeedActivated()): ?>
+<p style="width:600px">Products Ratings (last updated): <?php echo $_helper->getLastUpdated() ?></p>
+
+
+<form id="ratings_feed_form" name="ratings_feed_form" method="post" action="<?php echo $this->getUrl('*/*/ratings') ?>">
+	<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+	<input name="feed_type" type="hidden" value="ratings" />
+	<table>
+		
+		<tr>
+	
+		</tr>
+		<tr>
+			<td></td>
+			<td align="right">
+
+<input id="submit" name="submit" value="Update Ratings" type="submit" /></td>
+
+		</tr>
+	</table>
+
+</form>
+
+<?php else: ?>
+<form id="ratings_feed_form" name="ratings_feed_form" method="post" action="<?php echo $this->getBaseUrl().'admin/system_config/edit/section/turnto_admin/' ?>">
+	<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+<h4 style="margin-top:20px">Feed Configuration</h4>
+<p style="width:600px">Feed is not active. To configure the feed, please 
+<input id="submit" name="submit" value="Configure" type="submit" /></td>
+</form>
+
+<?php endif; ?>
+
+<br /><br />
+</p>
