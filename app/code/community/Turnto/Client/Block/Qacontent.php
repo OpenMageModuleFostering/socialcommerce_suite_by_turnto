@@ -37,7 +37,7 @@ class Turnto_Client_Block_Qacontent extends Mage_Core_Block_Template
         } else if ($setupType == $this::TURNTO_STATIC_EMBED) {
             $helper = Mage::helper('turnto_client_helper/data');
             $sku = $helper->getSku($this->getProduct());
-            return $helper->loadFile(Mage::getStoreConfig('turnto_admin/general/static_url') . '/sitedata/' . Mage::getStoreConfig('turnto_admin/general/site_key') . '/v' . $helper->getVersionForPath() . '/' . $sku . '/d/catitemhtml');
+            return $helper->loadFile(Mage::getStoreConfig('turnto_admin/general/static_url') . '/sitedata/' . Mage::getStoreConfig('turnto_admin/general/site_key') . '/v' . $helper->getVersionForPath() . '/' . urlencode($sku) . '/d/catitemhtml');
         }
 
         return '';

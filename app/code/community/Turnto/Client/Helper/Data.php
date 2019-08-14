@@ -21,9 +21,11 @@ class Turnto_Client_Helper_Data extends Mage_Core_Helper_Data
         return $url;
     }
 
-    function getSku()
+    function getSku($product)
     {
-        $product = $this->getProduct();
+        if (!$product) {
+            $product = $this->getProduct();
+        }
         $sku = null;
         $parentIds = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($product->getId());
         if (isset($parentIds[0])) {

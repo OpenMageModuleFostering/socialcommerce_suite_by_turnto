@@ -20,6 +20,9 @@
         //imageStoreBase: 'wac.edgecastcdn.net/001A39/qa',
         setupType: "<?php echo Mage::getStoreConfig('turnto_admin/qa/qa_setup_type') ?>",
         reviewsSetupType: "<?php echo Mage::getStoreConfig('turnto_admin/reviews/reviews_setup_type') ?>"
+        <?php if (intval(Mage::getStoreConfig('turnto_admin/general/skip_css_load')) == 1): ?>
+        ,skipCssLoad: true
+        <?php endif; ?>
         <?php if (intval(Mage::getStoreConfig('turnto_admin/qa/qa_teaser_custom_enabled')) == 1 && Mage::getStoreConfig('turnto_admin/qa/qa_teaser_type') == 'iTeaserFunc'): ?>
         ,iTeaserFunc: <?php echo Mage::getStoreConfig('turnto_admin/qa/qa_teaser_custom_function_name'); ?>
         <?php elseif (intval(Mage::getStoreConfig('turnto_admin/qa/qa_teaser_custom_enabled')) == 1 && Mage::getStoreConfig('turnto_admin/qa/qa_teaser_type') != 'iTeaserFunc'): ?>

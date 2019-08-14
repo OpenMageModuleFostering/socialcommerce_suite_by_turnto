@@ -173,7 +173,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
     public function generateHistoricalOrdersFeed($startDate, $storeId, $fileName) {
         $path = Mage::getBaseDir('media') . DS . 'turnto/';
         if (!file_exists($path)) {
-            mkdir($path, 0755);
+            mkdir($path, 0766);
         }
 
         $handle = fopen($path . $fileName, 'w');
@@ -202,6 +202,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
             foreach ($orders as $order) {
                 $itemlineid = 0;
                 foreach ($order->getAllVisibleItems() as $item) {
+                    $product = $item->getProduct();
                     //ORDERID
                     fwrite($handle, $order->getId());
                     fwrite($handle, "\t");
@@ -212,10 +213,9 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
                     fwrite($handle, $order->getCustomerEmail());
                     fwrite($handle, "\t");
                     //ITEMTITLE
-                    fwrite($handle, $item->getName());
+                    fwrite($handle, $product->getName());
                     fwrite($handle, "\t");
                     //ITEMURL
-                    $product = $item->getProduct();
                     fwrite($handle, $product->getProductUrl());
                     fwrite($handle, "\t");
                     //ITEMLINEID
@@ -237,7 +237,7 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
                     }
                     fwrite($handle, "\t");
                     //SKU
-                    fwrite($handle, $item->getSku());
+                    fwrite($handle, $product->getSku());
                     fwrite($handle, "\t");
                     //PRICE
                     fwrite($handle, $item->getOriginalPrice());
@@ -324,6 +324,9 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
                 Mage::log('Could not find the newly created historical feed file. Are the write permission correct on /media/turnto?', null, $logFile);
                 return;
             }
+
+            Mage::log("File size: " . filesize($file) . ' bytes', null, $logFile);
+
             $fields = array('siteKey' => $siteKey, 'authKey' => $authKey, 'feedStyle' => $feedStyle, 'file' => "@$file");
 
             Mage::log('Attempting to post file to ' . $url, null, $logFile);
@@ -335,7 +338,8 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
             curl_setopt($ch, CURLOPT_HEADER, 0);
 
             $response = curl_exec($ch);
-            Mage::log('Response from server: ' . $response, null, $logFile);
+            $errNo = curl_error($ch);
+            Mage::log('Response from server (error: ' . $errNo . '): ' . $response, null, $logFile);
             curl_close($ch);
 
             Mage::log('Ended pushHistoricalOrdersFeed', null, $logFile);
