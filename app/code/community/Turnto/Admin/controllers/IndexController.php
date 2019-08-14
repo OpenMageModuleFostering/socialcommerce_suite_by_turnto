@@ -109,6 +109,8 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
                     echo "\t";
                     //VIRTUALPARENTCODE
                     echo "\t";
+                    //INSTOCK
+                    echo "\t";
                     //CATEGORYPATHJSON
                     echo "\t";
                     //ISCATEGORY
@@ -151,6 +153,8 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
                     //REPLACEMENTSKU
                     echo "\t";
                     //VIRTUALPARENTCODE
+                    echo "\t";
+                    //INSTOCK
                     echo "\t";
                     //CATEGORYPATHJSON
                     echo "\t";
