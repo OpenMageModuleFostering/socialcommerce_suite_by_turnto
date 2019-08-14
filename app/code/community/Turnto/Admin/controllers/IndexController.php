@@ -9,28 +9,24 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
             $resource = Mage::getSingleton('core/resource');
             $readConnection = $resource->getConnection('core_read');
             $params = $this->getRequest()->getParams();
-
-            $storeId = 1;
-            if (isset($params['storeId'])) {
-                $storeId = $params['storeId'];
-            }
-
-            $websiteId = 1;
-            if (isset($params['websiteId'])) {
-                $websiteId = $params['websiteId'];
-            }
-
+            $storeId = $params['storeId'];
+            $websiteId = $params['websiteId'];
             $baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
             $baseMediaUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'catalog/product';
-
+            if (!isset($storeId)) {
+                $storeId = 1;
+            }
             $baseUrl = Mage::app()->getStore($storeId)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
             $baseMediaUrl = Mage::app()->getStore($storeId)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'catalog/product';
 
+            if (!isset($websiteId)) {
+                $websiteId = 1;
+            }
 
             echo "SKU\tIMAGEURL\tTITLE\tPRICE\tCURRENCY\tACTIVE\tITEMURL\tCATEGORY\tKEYWORDS\tREPLACEMENTSKU\tINSTOCK\tVIRTUALPARENTCODE\tCATEGORYPATHJSON\tISCATEGORY";
             echo "\n";
 
-            $pageSize = 100;
+            $pageSize = 1;
             $ids = Mage::getModel('catalog/product')
                 ->getCollection()
                 ->addStoreFilter($storeId)
@@ -51,20 +47,8 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
                     $parents = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($product->getId());
                     if (isset($parents[0])) {
                         // skip products with a parent
-                        continue;
+                        return;
                     }
-
-//                    $selectionCollection = $product->getTypeInstance(true)->getSelectionsCollection(
-//                        $product->getTypeInstance(true)->getOptionsIds($product), $product
-//                    );
-//
-//                    $bundledItems = array();
-//                    foreach($selectionCollection as $option)
-//                    {
-//                        $bundledItems[] = $option->getSku();
-//                    }
-//                    print_r($bundledItems);
-
                     //SKU
                     echo $product->getSku();
                     echo "\t";
@@ -101,15 +85,13 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
                     echo "\t";
                     //CATEGORY
                     $ids = $product->getCategoryIds();
-                    echo(isset($ids[0]) ? 'mag_category_'.$ids[0] : '');
+                    echo(isset($ids[0]) ? $ids[0] : '');
                     echo "\t";
                     // KEYWORDS
                     echo "\t";
                     // REPLACEMENTSKU
                     echo "\t";
                     //VIRTUALPARENTCODE
-                    echo "\t";
-                    //INSTOCK
                     echo "\t";
                     //CATEGORYPATHJSON
                     echo "\t";
@@ -124,8 +106,11 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
             $categories = Mage::getModel('catalog/category')->setStoreId($storeId)->getCollection()->addAttributeToSelect('*');
             if ($categories) {
                 foreach ($categories as $category) {
+                    if ($category->getId() == 1) {
+                        continue;
+                    }
                     $category->setStoreId($storeId);
-                    echo 'mag_category_'.$category->getId();
+                    echo $category->getId();
                     echo "\t";
                     //IMAGEURL
                     echo "\t";
@@ -143,15 +128,13 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
                     echo $category->getUrl();
                     echo "\t";
                     //CATEGORY
-                    echo $category->getParentCategory()->getId() ? 'mag_category_'.$category->getParentCategory()->getId() : '';
+                    echo $category->getParentCategory()->getId();
                     echo "\t";
                     //KEYWORDS
                     echo "\t";
                     //REPLACEMENTSKU
                     echo "\t";
                     //VIRTUALPARENTCODE
-                    echo "\t";
-                    //INSTOCK
                     echo "\t";
                     //CATEGORYPATHJSON
                     echo "\t";
@@ -167,10 +150,6 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
         return;
 
 
-    }
-
-    public function versionAction() {
-        echo Mage::getConfig()->getNode()->modules->Turnto_Admin->version;
     }
 }
 
