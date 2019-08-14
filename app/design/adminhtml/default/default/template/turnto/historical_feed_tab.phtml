@@ -7,21 +7,36 @@
 	<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
 	<input name="feed_type" type="hidden" value="historical" />
 	<table>
-		<?php if(count(Mage::registry('sites')) > 1) { ?>
+		<?php if(count(Mage::registry('stores')) > 1) { ?>
                 <tr>
-                        <td>Scope:</td>
-                        <td><select id="scope" name="scope">
+                        <td>Store:</td>
+                        <td><select id="storeId" name="storeId">
                                 <?php
-                                        $sites = Mage::registry('sites');
-                                        foreach($sites as $site) {
-                                                echo '<option value="'.$site->getId().'">'.$site->getId().': '.$site->getName().'</option>';
+                                        $stores = Mage::registry('stores');
+                                        foreach($stores as $store) {
+                                                echo '<option value="'.$store->getId().'">'.$store->getId().': '.$store->getName().'</option>';
                                         }
                                 ?>
                         </td>
                 </tr>
         <?php } else { ?>
-			<input name="scope" id="scope" type="hidden" value="1"/>
+			<input name="storeId" id="storeId" type="hidden" value="1"/>
 		<?php } ?>
+<!--		--><?php //if(count(Mage::registry('websites')) > 1) { ?>
+<!--			<tr>-->
+<!--				<td>Website:</td>-->
+<!--				<td><select id="websiteId" name="websiteId">-->
+<!--						--><?php
+//						$websites = Mage::registry('websites');
+//						foreach($websites as $website) {
+//							echo '<option value="'.$website->getId().'">'.$website->getId().': '.$website->getName().'</option>';
+//						}
+//						?>
+<!--				</td>-->
+<!--			</tr>-->
+<!--		--><?php //} else { ?>
+<!--			<input name="websiteId" id="websiteId" type="hidden" value="1"/>-->
+<!--		--><?php //} ?>
 		<tr>
 			<td>From Date:</td>
 			<td>

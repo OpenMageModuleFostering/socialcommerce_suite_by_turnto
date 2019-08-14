@@ -11,6 +11,15 @@ class Turnto_Admin_Model_Observer
 
         //return $this;
     }
+
+
+    public function pushHistoricalOrdersFeed() {
+        $helper = Mage::helper('adminhelper1');
+        if ($helper->isHistoricalOrderFeedPushEnabled()) {
+            // get historical orders for the past 2 years
+            $helper->pushHistoricalOrdersFeed();
+        }
+    }
  
  
 }

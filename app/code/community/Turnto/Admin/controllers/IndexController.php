@@ -27,17 +27,18 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
             $baseMediaUrl = Mage::app()->getStore($storeId)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'catalog/product';
 
 
-            echo "SKU\tIMAGEURL\tTITLE\tPRICE\tCURRENCY\tACTIVE\tITEMURL\tCATEGORY\tKEYWORDS\tREPLACEMENTSKU\tINSTOCK\tVIRTUALPARENTCODE\tCATEGORYPATHJSON\tISCATEGORY";
+            echo "SKU\tIMAGEURL\tTITLE\tPRICE\tCURRENCY\tACTIVE\tITEMURL\tCATEGORY\tKEYWORDS\tREPLACEMENTSKU\tINSTOCK\tVIRTUALPARENTCODE\tCATEGORYPATHJSON\tISCATEGORY\tBRAND";
             echo "\n";
 
             $pageSize = 100;
-            $ids = Mage::getModel('catalog/product')
+            $count = Mage::getModel('catalog/product')
                 ->getCollection()
                 ->addStoreFilter($storeId)
                 ->addWebsiteFilter($websiteId)
-                ->getAllIds();
+                ->getSize();
+
             $page = 1;
-            $pages = ceil(count($ids) / $pageSize);
+            $pages = ceil($count / $pageSize);
             do {
                 $collection = Mage::getModel('catalog/product')
                     ->getCollection()
@@ -101,7 +102,7 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
                     echo "\t";
                     //CATEGORY
                     $ids = $product->getCategoryIds();
-                    echo(isset($ids[0]) ? $ids[0] : '');
+                    echo(isset($ids[0]) ? 'mag_category_'.$ids[0] : '');
                     echo "\t";
                     // KEYWORDS
                     echo "\t";
@@ -115,6 +116,9 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
                     echo "\t";
                     //ISCATEGORY
                     echo "n";
+                    echo "\t";
+                    //BRAND
+                    echo $product->getAttributeText('manufacturer');
                     echo "\n";
                 }
                 $page++;
@@ -124,11 +128,8 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
             $categories = Mage::getModel('catalog/category')->setStoreId($storeId)->getCollection()->addAttributeToSelect('*');
             if ($categories) {
                 foreach ($categories as $category) {
-                    if ($category->getId() == 1) {
-                        continue;
-                    }
                     $category->setStoreId($storeId);
-                    echo $category->getId();
+                    echo 'mag_category_'.$category->getId();
                     echo "\t";
                     //IMAGEURL
                     echo "\t";
@@ -146,7 +147,7 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
                     echo $category->getUrl();
                     echo "\t";
                     //CATEGORY
-                    echo $category->getParentCategory()->getId();
+                    echo $category->getParentCategory()->getId() ? 'mag_category_'.$category->getParentCategory()->getId() : '';
                     echo "\t";
                     //KEYWORDS
                     echo "\t";
@@ -160,6 +161,8 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
                     echo "\t";
                     //ISCATEGORY
                     echo "Y";
+                    echo "\t";
+                    //BRAND
                     echo "\n";
                 }
             }

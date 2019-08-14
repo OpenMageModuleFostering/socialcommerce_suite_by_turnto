@@ -12,6 +12,10 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         return $this->checkFeed($feed_url);
     }
 
+    public function isHistoricalOrderFeedPushEnabled() {
+        return Mage::getStoreConfig('turnto_admin/historicalfeedconfig/enabled') != null;
+    }
+
     public function checkFeed($url = null)
     {
 
@@ -33,8 +37,8 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
     {
 
         $url = Mage::getStoreConfig('turnto_admin/feedconfig/url');
-        $site_key = Mage::getStoreConfig('turnto_admin/feedconfig/site_key');
-        $site_auth = Mage::getStoreConfig('turnto_admin/feedconfig/site_auth');
+        $site_key = Mage::getStoreConfig('turnto_admin/general/site_key');
+        $site_auth = Mage::getStoreConfig('turnto_admin/general/site_auth');
 
         if (!$url || !$site_key || !$site_auth)
             return null;
@@ -164,5 +168,168 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
         // var_dump($query); var_dump($result); exit;
 
         return $updated;
+    }
+
+    public function generateHistoricalOrdersFeed($startDate, $storeId, $fileName) {
+        $path = Mage::getBaseDir('media') . DS . 'turnto/';
+        mkdir($path, 0755);
+
+        $handle = fopen($path . $fileName, 'w');
+
+        if (!$handle) {
+            Mage::throwException($this->__('Could not create historical feed file in directory ' . $path));
+        }
+
+        fwrite($handle, "ORDERID\tORDERDATE\tEMAIL\tITEMTITLE\tITEMURL\tITEMLINEID\tZIP\tFIRSTNAME\tLASTNAME\tSKU\tPRICE\tITEMIMAGEURL\tDELIVERYDATE");
+        fwrite($handle, "\n");
+
+        $fromDate = date('Y-m-d H:i:s', strtotime($startDate));
+        Mage::app();
+        $orders = Mage::getModel('sales/order')
+            ->getCollection()
+            ->addFieldToFilter('store_id', $storeId)
+            ->addAttributeToFilter('created_at', array('from'=>$fromDate))
+            ->addAttributeToSort('entity_id', 'ASC')
+            ->setPageSize(100);
+
+        $pages = $orders->getLastPageNumber();
+
+        for ($curPage = 1; $curPage <= $pages; $curPage++) {
+            $orders->setCurPage($curPage);
+            $orders->load();
+            foreach ($orders as $order) {
+                $itemlineid = 0;
+                foreach ($order->getAllVisibleItems() as $item) {
+                    //ORDERID
+                    fwrite($handle, $order->getRealOrderId());
+                    fwrite($handle, "\t");
+                    //ORDERDATE
+                    fwrite($handle, $order->getCreatedAtDate()->toString('Y-MM-d'));
+                    fwrite($handle, "\t");
+                    //EMAIL
+                    fwrite($handle, $order->getCustomerEmail());
+                    fwrite($handle, "\t");
+                    //ITEMTITLE
+                    fwrite($handle, $item->getName());
+                    fwrite($handle, "\t");
+                    //ITEMURL
+                    $product = $item->getProduct();
+                    fwrite($handle, $product->getProductUrl());
+                    fwrite($handle, "\t");
+                    //ITEMLINEID
+                    fwrite($handle, $itemlineid++);
+                    fwrite($handle, "\t");
+                    //ZIP
+                    fwrite($handle, $order->getShippingAddress()->getPostcode());
+                    fwrite($handle, "\t");
+                    //FIRSTNAME
+                    $name = explode(' ', $order->getCustomerName());
+                    fwrite($handle, $name[0]);
+                    fwrite($handle, "\t");
+                    //LASTNAME
+                    if (isset($name[1])) {
+                        fwrite($handle, $name[1]);
+                    }
+                    fwrite($handle, "\t");
+                    //SKU
+                    fwrite($handle, $item->getSku());
+                    fwrite($handle, "\t");
+                    //PRICE
+                    fwrite($handle, $item->getOriginalPrice());
+                    fwrite($handle, "\t");
+                    //ITEMIMAGEURL
+                    if ($product->getImage() != null && $product->getImage() != "no_selection") {
+                        fwrite($handle, Mage::getModel('catalog/product_media_config')->getMediaUrl($product->getImage()));
+                    } else if ($product->getSmallImage() != null && $product->getSmallImage() != "no_selection") {
+                        fwrite($handle, Mage::getModel('catalog/product_media_config')->getMediaUrl($product->getSmallImage()));
+                    } else if ($product->getThumbnail() != null && $product->getThumbnail() != "no_selection") {
+                        fwrite($handle, Mage::getModel('catalog/product_media_config')->getMediaUrl($product->getThumbnail()));
+                    }
+                    fwrite($handle, "\t");
+
+                    //DELIVERYDATE
+                    $shipDate = $this->getDateOfShipmentContainingItem($order, $item);
+                    if ($shipDate != null) {
+                        fwrite($handle, $shipDate->toString('Y-MM-d'));
+                    }
+
+                    fwrite($handle, "\n");
+                }
+            }
+            $orders->clear();
+        }
+
+        fclose($handle);
+    }
+
+    private function getDateOfShipmentContainingItem($order, $item) {
+        // get the shipments for this order
+        $shipments = $order->getShipmentsCollection();
+        foreach ($shipments as $shipment) {
+            // get the items in this shipment
+            $items = $shipment->getItemsCollection();
+            foreach ($items as $it) {
+                // check if this shipment contains the item that was passed in
+                if ($item->getId() == $it->getId()) {
+                    return $shipment->getCreatedAtDate();
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public function pushHistoricalOrdersFeed() {
+        $path = Mage::getBaseDir('media') . DS . 'turnto/';
+        mkdir($path, 0755);
+
+        $logFile = 'turnto_historical_feed_job.log';
+
+        Mage::log('Started pushHistoricalOrdersFeed', null, $logFile);
+
+        $fileName = 'magento_auto_histfeed.csv';
+        $storeId =  Mage::getStoreConfig('turnto_admin/general/storeId');
+        $storeId = $storeId ? $storeId : 1;
+        $this->generateHistoricalOrdersFeed(mktime(0, 0, 0, date("m"), date("d"), date("Y") - 2), $storeId, $fileName);
+
+        $file = $path . $fileName;
+        $siteKey = Mage::getStoreConfig('turnto_admin/general/site_key');
+        $authKey = Mage::getStoreConfig('turnto_admin/general/site_auth');
+        $baseUrl = Mage::getStoreConfig('turnto_admin/general/url');
+        if (!$baseUrl) {
+            $baseUrl = "http://www.turnto.com";
+        }
+        $url = $baseUrl . "/feedUpload/postfile";
+        $feedStyle = "tab-style.1";
+
+        if (!$siteKey || !$authKey) {
+            return;
+        }
+
+        Mage::log('Filename: ' . $fileName, null, $logFile);
+        Mage::log('Store Id: ' . $storeId, null, $logFile);
+        Mage::log('siteKey: ' . $siteKey, null, $logFile);
+        Mage::log('authKey: ' . $authKey, null, $logFile);
+
+        $fields = array('siteKey' => $siteKey, 'authKey' => $authKey, 'feedStyle' => $feedStyle, 'file' => "@$file");
+        $fields_string = '';
+        foreach ($fields as $key => $value) {
+            $fields_string .= $key . '=' . $value . '&';
+        }
+        rtrim($fields_string, '&');
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        Mage::log('Ended pushHistoricalOrdersFeed', null, $logFile);
+
+        echo $response;
     }
 }

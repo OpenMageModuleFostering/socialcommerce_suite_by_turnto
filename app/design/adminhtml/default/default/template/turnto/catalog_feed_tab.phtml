@@ -34,19 +34,23 @@ To manually create a catalog feed press Generate to build a catalog feed. This f
 		-->
 		<tr>
 		<?php
-			echo '<td>Website/Store:</td>';
+			echo '<td>Website:</td>';
                                 echo '<td><select id="websiteId" name="websiteId">'; 
 			foreach (Mage::registry('websites') as $website) {
-				foreach ($website->getGroups() as $group) {
-                                	$stores = $group->getStores();
-                               		foreach ($stores as $store) {
-                                       		//echo '<option value="'.$website->getId().'_'.store->getId().'">Website</option>';
-						echo '<option value="'.$website->getId().'_'.$store->getId().'">'.$website->getId().': '.$website->getName().' '.$store->getId().': '.$store->getName().'</option>';	
-                                	}
-                        	}
-                	}
+				echo '<option value="'.$website->getId().'">'.$website->getId().': '.$website->getName().'</option>';
+			}
 			echo '</select></td>'
 		?>
+		</tr>
+		<tr>
+			<?php
+			echo '<td>Store:</td>';
+			echo '<td><select id="storeId" name="storeId">';
+			foreach (Mage::registry('stores') as $store) {
+				echo '<option value="'.$store->getId().'">'.$store->getId().': '.$store->getName().'</option>';
+			}
+			echo '</select></td>'
+			?>
 		</tr>
 		<tr>
 			<td></td>
