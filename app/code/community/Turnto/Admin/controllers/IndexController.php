@@ -9,24 +9,28 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
             $resource = Mage::getSingleton('core/resource');
             $readConnection = $resource->getConnection('core_read');
             $params = $this->getRequest()->getParams();
-            $storeId = $params['storeId'];
-            $websiteId = $params['websiteId'];
+
+            $storeId = 1;
+            if (isset($params['storeId'])) {
+                $storeId = $params['storeId'];
+            }
+
+            $websiteId = 1;
+            if (isset($params['websiteId'])) {
+                $websiteId = $params['websiteId'];
+            }
+
             $baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
             $baseMediaUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'catalog/product';
-            if (!isset($storeId)) {
-                $storeId = 1;
-            }
+
             $baseUrl = Mage::app()->getStore($storeId)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
             $baseMediaUrl = Mage::app()->getStore($storeId)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA) . 'catalog/product';
 
-            if (!isset($websiteId)) {
-                $websiteId = 1;
-            }
 
             echo "SKU\tIMAGEURL\tTITLE\tPRICE\tCURRENCY\tACTIVE\tITEMURL\tCATEGORY\tKEYWORDS\tREPLACEMENTSKU\tINSTOCK\tVIRTUALPARENTCODE\tCATEGORYPATHJSON\tISCATEGORY";
             echo "\n";
 
-            $pageSize = 1;
+            $pageSize = 100;
             $ids = Mage::getModel('catalog/product')
                 ->getCollection()
                 ->addStoreFilter($storeId)
@@ -47,8 +51,20 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
                     $parents = Mage::getModel('catalog/product_type_configurable')->getParentIdsByChild($product->getId());
                     if (isset($parents[0])) {
                         // skip products with a parent
-                        return;
+                        continue;
                     }
+
+//                    $selectionCollection = $product->getTypeInstance(true)->getSelectionsCollection(
+//                        $product->getTypeInstance(true)->getOptionsIds($product), $product
+//                    );
+//
+//                    $bundledItems = array();
+//                    foreach($selectionCollection as $option)
+//                    {
+//                        $bundledItems[] = $option->getSku();
+//                    }
+//                    print_r($bundledItems);
+
                     //SKU
                     echo $product->getSku();
                     echo "\t";
@@ -150,6 +166,10 @@ class Turnto_Admin_IndexController extends Mage_Core_Controller_Front_Action
         return;
 
 
+    }
+
+    public function versionAction() {
+        echo Mage::getConfig()->getNode()->modules->Turnto_Admin->version;
     }
 }
 

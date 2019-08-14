@@ -2,7 +2,7 @@
 <p style="margin-top:10px;width:600px">
 
  
-Instructions here for the Product Ratings (to change this text, update file: app/design/adminhtml/default/default/template/turnto/product_ratings_feed_tab.phtml)
+This TurnTo Magento Extension can automate the process of retrieving the SKU average rating feed.  Click on the configure link below to set it up.
 <br>
 <br>
 
@@ -37,13 +37,11 @@ Instructions here for the Product Ratings (to change this text, update file: app
 <form id="ratings_feed_form" name="ratings_feed_form" method="post" action="<?php echo $this->getBaseUrl().'admin/system_config/edit/section/turnto_admin/' ?>">
 	<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
 <h4 style="margin-top:20px">Feed Configuration</h4>
-<p style="width:600px">Feed is not active. To configure the feed, please 
-<!--<a href="<?php //echo $this->getBaseUrl().'admin/system_config/edit/section/turnto_admin/ ?>" alt="Products Ratings Feed Configuration">here</a>-->
-<input id="submit" name="submit" value="Configure" type="submit" /></td>
+<span>Feed is not active. </span> <input id="submit" name="submit" value="Configure" type="submit" />
 </form>
 
 <?php endif; ?>
 
 
 <br /><br />
-</p>
+

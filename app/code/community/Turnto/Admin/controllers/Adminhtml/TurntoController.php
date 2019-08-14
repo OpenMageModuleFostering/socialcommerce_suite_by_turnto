@@ -1,6 +1,6 @@
 <?php
 
-class Turnto_Admin_AdminControllers_TurntoController extends Mage_Adminhtml_Controller_Action
+class Turnto_Admin_Adminhtml_TurntoController extends Mage_Adminhtml_Controller_Action
 {
 	public function indexAction()
 	{
@@ -55,6 +55,10 @@ class Turnto_Admin_AdminControllers_TurntoController extends Mage_Adminhtml_Cont
 
 				$scope = $post['scope'];
 				$handle = fopen($path . 'histfeed.csv', 'w');
+
+				if (!$handle) {
+					Mage::throwException($this->__('Could not create historical feed file in directory ' . $path));
+				}
 				
 				fwrite($handle, "ORDERID\tORDERDATE\tEMAIL\tITEMTITLE\tITEMURL\tITEMLINEID\tZIP\tFIRSTNAME\tLASTNAME\tSKU\tPRICE\tITEMIMAGEURL");
 				fwrite($handle, "\n");

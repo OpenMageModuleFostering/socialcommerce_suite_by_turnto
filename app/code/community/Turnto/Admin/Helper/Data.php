@@ -40,7 +40,6 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
             return null;
 
         $feed_url = rtrim($url, '/') . '/' . $site_key . '/' . $site_auth . '/turnto-skuaveragerating.xml';
-        //var_dump($feed_url);
 
         return $feed_url;
     }

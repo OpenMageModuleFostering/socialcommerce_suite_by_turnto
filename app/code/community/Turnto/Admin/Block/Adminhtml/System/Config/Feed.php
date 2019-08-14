@@ -11,7 +11,6 @@ class Turnto_Admin_Block_Adminhtml_System_Config_Feed
 
    public function __construct() 
    {
-
       parent::__construct();
       $this->setTemplate('turnto/adminhtml/system/config/feed.phtml');
        // don't load the process the entire feed on config page load.

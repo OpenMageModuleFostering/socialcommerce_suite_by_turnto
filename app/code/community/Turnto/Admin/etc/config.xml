@@ -22,7 +22,7 @@
             <adminhelper1>
                 <class>Turnto_Admin_Helper</class>
             </adminhelper1>
-        </helpers> 
+        </helpers>
         <models>
             <catalog>
                 <rewrite>
@@ -60,11 +60,11 @@
                     <frontName>turntocatalogfeed</frontName>
                 </args>
             </turntocatfeed>
-	    <turntoversion>
+	        <turntoversion>
                 <use>standard</use>
                 <args>
-                    <module>Turnto_Admin</module>
-                    <frontName>turnto</frontName>
+                    <module>Turnto_Admin_Adminhtml</module>
+                    <frontName>version</frontName>
                 </args>
             </turntoversion>
         </routers>
@@ -72,48 +72,42 @@
 	
 	<admin>
 		<routers>
-		   <samplerouter1>
-                <use>admin</use>
+		   <adminhtml>
                 <args>
-                    <module>Turnto_Admin_AdminControllers</module>
-                    <frontName>adminturnto</frontName>
-                    
                     <modules>
-		         		<sintax after="Turnto_Admin_AdminControllers">Mage_Adminhtml</sintax>
+		         		<turntorouter after="Mage_Adminhtml">Turnto_Admin_Adminhtml</turntorouter>
 		       		</modules>
                 </args>
-		   </samplerouter1>		     
+		   </adminhtml>
 	     </routers>    	
 	</admin>
- 
+
     <adminhtml>
         <menu>
-             <menu1 translate="title" module="adminhelper1">
+            <turntoadminmenu translate="title" module="adminhelper1">
                 <title>TurnTo</title>
                 <sort_order>200</sort_order>
                 <children>
-                <!-- Note the misleading "module" attribute. 
-                	It actualy refers to one of the declared helpers -->
-                    <item1 translate="title" module="adminhelper1">
+                    <item1>
                         <title>Integration</title>
-                        <action>samplerouter1/Turnto</action>
-                        <sort_order>1</sort_order>                        
+                        <action>adminhtml/turnto</action>
+                        <sort_order>1</sort_order>
                     </item1>
-                    <item2 translate="title" module="adminhelper1">
+                    <item2>
                         <title>Moderation</title>
-                        <action>samplerouter1/Turnto/redirect</action>
-                        <sort_order>2</sort_order>                        
+                        <action>adminhtml/turnto/redirect</action>
+                        <sort_order>2</sort_order>
                     </item2>
-                    <item3 translate="title" module="adminhelper1">
+                    <item3>
                         <title>Reporting</title>
-                        <action>samplerouter1/Turnto/redirect</action>
-                        <sort_order>3</sort_order>                        
-                    </item3>   
-				</children>
-             </menu1>
+                        <action>adminhtml/turnto/redirect</action>
+                        <sort_order>3</sort_order>
+                    </item3>
+                </children>
+            </turntoadminmenu>
         </menu>
-         <acl>
-         <resources>
+        <acl>
+        <resources>
             <all>
                <title>Allow Everything</title>
             </all>
@@ -129,12 +123,12 @@
                                     </children>
                                 </config>
                             </children>
-                        </system>                  
+                        </system>
                </children>
             </admin>
          </resources>
       </acl>
-	</adminhtml> 
+	</adminhtml>
     <default>
         <turnto_admin>
             <feedconfig>
