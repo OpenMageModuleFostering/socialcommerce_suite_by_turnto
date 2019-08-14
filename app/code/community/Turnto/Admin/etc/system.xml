@@ -113,6 +113,30 @@
                                 (15 minutes)
                             </comment>
                         </teaser_cache_time>
+                        <cc_display_cache_time>
+                            <label>Checkout Chatter Display Widget Cache Time</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number</validate>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>The amount of time to cache the Checkout Chatter Display Widget. Value is in seconds. Default is 900
+                                (15 minutes)
+                            </comment>
+                        </cc_display_cache_time>
+                        <vcgallery_cache_time>
+                            <label>Visual Content Gallery Widget Cache Time</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number</validate>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>The amount of time to cache the Visual Content Gallery Widget. Value is in seconds. Default is 900
+                                (15 minutes)
+                            </comment>
+                        </vcgallery_cache_time>
                         <!-- UPC -->
                         <upc_attribute>
                             <label>UPC Attribute</label>
@@ -192,10 +216,10 @@
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
-                    <expanded>1</expanded>
+                    <expanded>0</expanded>
                     <fields>
                         <checkoutcomments_enabled>
-                            <label>Enabled Checkout Comments</label>
+                            <label>Enabled Checkout Comments (on checkout confirmation page)</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>1</sort_order>
@@ -203,6 +227,166 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </checkoutcomments_enabled>
+                        <checkoutcomments_display_enabled>
+                            <label>Enabled Checkout Comments Display Widget (on PDP)</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[You'll need to place the following code on your product details page in the position where you'd like the widget to appear:<br />
+                            &lt;?php echo $this-&gt;getChildHtml('turnto_cc_pdp') ?&gt;]]></comment>
+                        </checkoutcomments_display_enabled>
+                        <cc_columns>
+                            <label>Display Widget Columns</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>Turnto_Admin_Block_Adminhtml_System_Config_Cccolumns</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>Number of columns.  Can be 1, 2, 3, 4, or Auto.  'Auto' detects the available width and chooses the best number of columns for you.</comment>
+                        </cc_columns>
+                        <cc_rows_collapsed>
+                            <label>Display Widget Rows in collapsed view</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <validate>validate-number</validate>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is 2) - Number of rows displayed after "Read all" is selected.  This value should be less than rowsInExpandedView.</comment>
+                        </cc_rows_collapsed>
+                        <cc_rows_expanded>
+                            <label>Display Widget Rows in expanded view</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <validate>validate-number</validate>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is 10) - Number of rows displayed after "Read all" is selected.</comment>
+                        </cc_rows_expanded>
+                        <cc_title>
+                            <label>Display Widget Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is "Why I Chose This:") - Title displayed at the top of the widget</comment>
+                        </cc_title>
+                        <cc_expand_text>
+                            <label>Display Widget Expanded Text</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is "Read More") - Link label in top right corner for expanding the widget.</comment>
+                        </cc_expand_text>
+                        <cc_collaped_text>
+                            <label>Display Widget Collapsed Text</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is "Read Less") - Link label in top right corner for collapsing the widget.</comment>
+                        </cc_collaped_text>
+                        <cc_pagination_prev_text>
+                            <label>Display Widget Pagination 'Previous' Text</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is "Previous") - The label for the Previous link used in pagination</comment>
+                        </cc_pagination_prev_text>
+                        <cc_pagination_next_text>
+                            <label>Display Widget Pagination 'Next' Text</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is "Next") - The label for the Next link used in pagination. </comment>
+                        </cc_pagination_next_text>
+                        <cc_minimum_comment_count>
+                            <label>Display Widget Minimum Comment Count (hidden if less)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>90</sort_order>
+                            <validate>validate-number</validate>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is 4) - Minimum number of comments required to display widget.  The widget is hidden if less than the minimum are available.</comment>
+                        </cc_minimum_comment_count>
+                        <cc_minimum_comment_character_count>
+                            <label>Display Widget Minimum Comment Character Count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <validate>validate-number</validate>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is 20) - Comments with less characters than this minimum will not be displayed or included in the counts.</comment>
+                        </cc_minimum_comment_character_count>
+                        <cc_minimum_comment_word_count>
+                            <label>Display Widget Minimum Comment Word Count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>110</sort_order>
+                            <validate>validate-number</validate>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is 3) -  Comments with less words than this minimum will not be displayed or included in the counts.</comment>
+                        </cc_minimum_comment_word_count>
+                        <cc_truncate_length>
+                            <label>Display Widget Comment Truncate Length</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>120</sort_order>
+                            <validate>validate-number</validate>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is 200) - The text of the comment will be truncated to this length.</comment>
+                        </cc_truncate_length>
+                        <cc_include_syndicated>
+                            <label>Display Widget Include Syndicated Comments</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is Yes) - Determines whether syndicated comments will be displayed in the widget.  A syndicated comment is a comment that came from a source other than your website.</comment>
+                        </cc_include_syndicated>
+                        <cc_sort_order>
+                            <label>Display Widget Sort Order</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>Turnto_Admin_Block_Adminhtml_System_Config_Ccsortorder</source_model>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends><checkoutcomments_display_enabled>1</checkoutcomments_display_enabled></depends>
+                            <comment>(default is "Most Recent") - "Most Recent" orders the comments from newest to oldest.  "Longest" orders the comments from longest to shortest.</comment>
+                        </cc_sort_order>
                     </fields>
                 </checkoutcomments>
                 <qa>
@@ -223,6 +407,15 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </qa_setup_type>
+                        <qa_teaser_type>
+                            <label>Q&amp;A Teaser Type</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>Turnto_Admin_Block_Adminhtml_System_Config_Teasertype</source_model>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </qa_teaser_type>
                         <qa_teaser_custom_enabled>
                             <label>Use Custom Q&amp;A Teaser</label>
                             <frontend_type>select</frontend_type>
@@ -310,6 +503,502 @@
                         </reviews_teaser_custom_function_name>
                     </fields>
                 </reviews>
+                <vcgallery>
+                    <label>Turnto Visual Content Gallery</label>
+                    <comment>The Visual Content Gallery widget is displayed on the product details page.</comment>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>7</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>1</expanded>
+                    <fields>
+                        <vc_gallery_enabled>
+                            <label>Enabled Visual Content Gallery Widget</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[You'll need to place the following code on your product details page in the position where you'd like the widget to appear:<br />
+                            &lt;?php echo $this-&gt;getChildHtml('turnto_vc_gallery') ?&gt;]]></comment>
+                        </vc_gallery_enabled>
+                        <title>
+                            <label>Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default is "Customer Gallery") - Title displayed at the top of the widget</comment>
+                            <depends><vc_gallery_enabled>1</vc_gallery_enabled></depends>
+                        </title>
+                        <size>
+                            <label>Size</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>Turnto_Admin_Block_Adminhtml_System_Config_Vcgallerysize</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default is small) - Widget display size. Options are 'large' and 'small'</comment>
+                            <depends><vc_gallery_enabled>1</vc_gallery_enabled></depends>
+                        </size>
+                        <modalSize>
+                            <label>Modal Size</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>Turnto_Admin_Block_Adminhtml_System_Config_Vcgallerysize</source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default is Small) - The size of the modal detail view when the user clicks on the widget thumbnail. This configuration option is ignored on mobile views</comment>
+                            <depends><vc_gallery_enabled>1</vc_gallery_enabled></depends>
+                        </modalSize>
+                        <showCaptionsInline>
+                            <label>Show Captions Inline</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default is false) - Sets whether captions display below widget thumbnails</comment>
+                            <depends><vc_gallery_enabled>1</vc_gallery_enabled></depends>
+                        </showCaptionsInline>
+                        <truncateLength>
+                            <label>Truncate Length</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default value is 40) - max length of caption text characters to display. ends with ellipsis (...)</comment>
+                            <depends><vc_gallery_enabled>1</vc_gallery_enabled></depends>
+                            <validate>validate-number</validate>
+                        </truncateLength>
+                        <minimumContentCount>
+                            <label>Minimum Content Count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default value is 1) - Hide the widget unless there are this many visual content items to display</comment>
+                            <depends><vc_gallery_enabled>1</vc_gallery_enabled></depends>
+                            <validate>validate-number</validate>
+                        </minimumContentCount>
+                        <minimumTextContentCharacterCount>
+                            <label>Minimum Text Content Character Count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default value is 0) - Only show media items with this many characters or more in the caption</comment>
+                            <depends><vc_gallery_enabled>1</vc_gallery_enabled></depends>
+                            <validate>validate-number</validate>
+                        </minimumTextContentCharacterCount>
+                        <minimumTextContentWordCount>
+                            <label>Minimum Text Content Word Count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default value is 0) - Only show media items with this many words or more in the caption</comment>
+                            <depends><vc_gallery_enabled>1</vc_gallery_enabled></depends>
+                            <validate>validate-number</validate>
+                        </minimumTextContentWordCount>
+                        <sortOrder>
+                            <label>Sort Order</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>Turnto_Admin_Block_Adminhtml_System_Config_Vcgallerysort</source_model>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>'Most Votes' sorts by the most upvotes, 'Most Recent' sorts by the the comment creation date descending, 'Longest' sorts by the longest caption first</comment>
+                            <depends><vc_gallery_enabled>1</vc_gallery_enabled></depends>
+                        </sortOrder>
+                    </fields>
+                </vcgallery>
+                <vcpinboard>
+                    <label>Turnto Visual Content Pinboard</label>
+                    <comment><![CDATA[The Visual Content Pinboard is located: &lt;basedir&gt;/pinboard/visualcontent]]></comment>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>8</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>0</expanded>
+                    <fields>
+                        <enabled>
+                            <label>Enabled Visual Content Gallery Widget</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enabled>
+                        <title>
+                            <label>Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default is "Customer Comments") - Title displayed at the top of the widget</comment>
+                            <depends><enabled>1</enabled></depends>
+                        </title>
+                        <skus>
+                            <label>SKUs</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Allows you to filter displayed content by one or more SKU(s) and/or Category(ies); Must be set as a valid Javascript array, e.g. ['category1','sku1','sku2']</comment>
+                            <depends><enabled>1</enabled></depends>
+                        </skus>
+                        <brands>
+                            <label>Brands</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Allows you to filter displayed content by one or more brand(s); Must be a valid Javascript array, e.g. ['brand1']</comment>
+                            <depends><enabled>1</enabled></depends>
+                        </brands>
+                        <tags>
+                            <label>Tags</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Allows you to filter displayed content by one or more tag code(s); Must be a valid Javascript array, e.g. ['tagcode1','tagcode2']</comment>
+                            <depends><enabled>1</enabled></depends>
+                        </tags>
+                        <activeOnly>
+                            <label>Active Only</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default is No) - Only returns content for active products when 'Yes', otherwise all products are available</comment>
+                            <depends><enabled>1</enabled></depends>
+                        </activeOnly>
+                        <showDatestamp>
+                            <label>Show Datestamp</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default is 'Yes') - Configures whether the datestamp displays on the pinboard. Note the datestamp always displays on the modal detail view</comment>
+                            <depends><enabled>1</enabled></depends>
+                        </showDatestamp>
+                        <showCaption>
+                            <label>Show Caption</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default is 'Yes') - Configures whether the caption displays on the pinboard. Note the caption always displays on the modal detail view</comment>
+                            <depends><enabled>1</enabled></depends>
+                        </showCaption>
+                        <minCaptionCharCount>
+                            <label>Minimum Caption Character Count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default value is 0) - Only show media items with this many characters or more in the caption</comment>
+                            <validate>validate-number</validate>
+                            <depends><enabled>1</enabled></depends>
+                        </minCaptionCharCount>
+                        <minCaptionWordCount>
+                            <label>Minimum Caption Word Count</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default value is 0) - Only show media items with this many words or more in the caption</comment>
+                            <validate>validate-number</validate>
+                            <depends><enabled>1</enabled></depends>
+                        </minCaptionWordCount>
+                        <maxCaptionLength>
+                            <label>Maximum Caption Length</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default value is 85) - max length of caption text characters to display. ends with ellipsis (...)</comment>
+                            <validate>validate-number</validate>
+                            <depends><enabled>1</enabled></depends>
+                        </maxCaptionLength>
+                        <nameMaxLength>
+                            <label>Maximum Name Length</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default value is 255) - The maximum length of the user's name, after which displays an ellipsis (...)</comment>
+                            <validate>validate-number</validate>
+                            <depends><enabled>1</enabled></depends>
+                        </nameMaxLength>
+                        <sortOrder>
+                            <label>Sort Order</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default value is 0) - Options are '0' to sort by the most recent or '1' to sort by the most upvotes</comment>
+                            <validate>validate-number</validate>
+                            <depends><enabled>1</enabled></depends>
+                        </sortOrder>
+                        <limit>
+                            <label>Limit</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default value is 20) - The maximum number of product boxes to be displayed on page load. The remaining product boxes will be loaded in batches equal to the limit</comment>
+                            <validate>validate-number</validate>
+                            <depends><enabled>1</enabled></depends>
+                        </limit>
+                        <progressiveLoading>
+                            <label>Progressive Loading</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default is 'Yes') - When set to 'Yes' any remaining available content beyond the set limit will load once the user gets to the bottom of the page. If set to 'No' a 'load more' button will display instead</comment>
+                            <depends><enabled>1</enabled></depends>
+                        </progressiveLoading>
+                        <hSpacing>
+                            <label>Horizontal Spacing (in pixels)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default value is 8) - Used for horizontal spacing between items. Value is in pixels</comment>
+                            <validate>validate-number</validate>
+                            <depends><enabled>1</enabled></depends>
+                        </hSpacing>
+                        <vSpacing>
+                            <label>Vertical Spacing (in pixels)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default value is 8) - Used for vertical spacing between items. Value is in pixels</comment>
+                            <validate>validate-number</validate>
+                            <depends><enabled>1</enabled></depends>
+                        </vSpacing>
+                    </fields>
+                </vcpinboard>
+                <ccpinboard>
+                    <label>TurnTo Checkout Comments Pinboard</label>
+                    <comment><![CDATA[The Checkout Comments Pinboard is located: &lt;basedir&gt;/pinboard/checkoutcomments]]></comment>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>9</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <expanded>0</expanded>
+                    <fields>
+                        <enabled>
+                            <label>Enabled Checkout Comments Pinboard</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </enabled>
+                        <title>
+                            <label>Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default is "Customer Comments") - Title displayed at the top of the widget</comment>
+                            <depends><enabled>1</enabled></depends>
+                        </title>
+                        <skus>
+                            <label>SKUs</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Allows you to filter displayed content by one or more SKU(s) and/or Category(ies); Must be set as a valid Javascript array, e.g. ['category1','sku1','sku2']</comment>
+                            <depends><enabled>1</enabled></depends>
+                        </skus>
+                        <brands>
+                            <label>Brands</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Allows you to filter displayed content by one or more brand(s); Must be a valid Javascript array, e.g. ['brand1']</comment>
+                            <depends><enabled>1</enabled></depends>
+                        </brands>
+                        <tags>
+                            <label>Tags</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Allows you to filter displayed content by one or more tag code(s); Must be a valid Javascript array, e.g. ['tagcode1','tagcode2']</comment>
+                            <depends><enabled>1</enabled></depends>
+                        </tags>
+                        <activeOnly>
+                            <label>Active Only</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default is No) - Only returns content for active products when 'Yes', otherwise all products are available</comment>
+                            <depends><enabled>1</enabled></depends>
+                        </activeOnly>
+                        <includeSyndicated>
+                            <label>Include Syndicated</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default is No) - Whether to include content from syndication partners</comment>
+                            <depends><enabled>1</enabled></depends>
+                        </includeSyndicated>
+                        <titleMaxLength>
+                            <label>Max Title Length</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default value is 255) - The maximum length of the product title, after which displays an ellipsis (...)</comment>
+                            <validate>validate-number</validate>
+                            <depends><enabled>1</enabled></depends>
+                        </titleMaxLength>
+                        <maxDaysOld>
+                            <label>Max Days Old</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default value is 30) - The maximum days old a comment can be and still appear in the product box. A value of -1 specifies means all comments should be included, regardless of age</comment>
+                            <validate>validate-number</validate>
+                            <depends><enabled>1</enabled></depends>
+                        </maxDaysOld>
+                        <maxCommentsPerBox>
+                            <label>Maximum Comments per Box</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default value is 5) - The maximum number of comments that should be displayed in each product box</comment>
+                            <validate>validate-number</validate>
+                            <depends><enabled>1</enabled></depends>
+                        </maxCommentsPerBox>
+                        <nameMaxLength>
+                            <label>Maximum Name Length</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default value is 255) - The maximum length of the user's name, after which displays an ellipsis (...)</comment>
+                            <validate>validate-number</validate>
+                            <depends><enabled>1</enabled></depends>
+                        </nameMaxLength>
+                        <commentMaxLength>
+                            <label>Maximum Comment Length</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default value is 200) - The maximum length of text characters to display. ends with ellipsis (...)</comment>
+                            <validate>validate-number</validate>
+                            <depends><enabled>1</enabled></depends>
+                        </commentMaxLength>
+                        <limit>
+                            <label>Limit</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default value is 20) - The maximum number of product boxes to be displayed on page load. The remaining product boxes will be loaded in batches equal to the limit</comment>
+                            <validate>validate-number</validate>
+                            <depends><enabled>1</enabled></depends>
+                        </limit>
+                        <progressiveLoading>
+                            <label>Progressive Loading</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default is 'Yes') - When set to 'Yes' any remaining available content beyond the set limit will load once the user gets to the bottom of the page. If set to 'No' a 'load more' button will display instead</comment>
+                            <depends><enabled>1</enabled></depends>
+                        </progressiveLoading>
+                        <hSpacing>
+                            <label>Horizontal Spacing (in pixels)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default value is 8) - Used for horizontal spacing between items. Value is in pixels</comment>
+                            <validate>validate-number</validate>
+                            <depends><enabled>1</enabled></depends>
+                        </hSpacing>
+                        <vSpacing>
+                            <label>Vertical Spacing (in pixels)</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>(default value is 8) - Used for vertical spacing between items. Value is in pixels</comment>
+                            <validate>validate-number</validate>
+                            <depends><enabled>1</enabled></depends>
+                        </vSpacing>
+                    </fields>
+                </ccpinboard>
                 <mobileconfig>
                     <label>Turnto Mobile Configuration</label>
                     <comment><![CDATA[The default mobile landing page URL is &lt;baseurl&gt;/turntomobile]]></comment>

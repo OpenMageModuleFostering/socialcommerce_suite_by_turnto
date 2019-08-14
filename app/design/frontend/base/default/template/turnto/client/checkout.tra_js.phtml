@@ -1,13 +1,22 @@
 <?php if(Mage::getStoreConfig('turnto_admin/checkoutcomments/checkoutcomments_enabled') == 1) : ?>
 <?php $helper = Mage::helper('turnto_client_helper/data'); ?>
 <script type="text/javascript">
+    var turnToEmbedCommentCapture = false;
+    if (navigator.userAgent.match(/(iPhone|Android|BlackBerry|IEMobile)/)) {
+        turnToEmbedCommentCapture = true;
+    }
     // turnto extension
     var turnToConfig = {
         siteKey: "<?php echo Mage::getStoreConfig('turnto_admin/general/site_key'); ?>",
         host: "<?php echo $helper->getHostWithoutProtocol(); ?>",
         staticHost: "<?php echo $helper->getStaticHostWithoutProtocol(); ?>",
-        postPurchaseFlow:true
+        postPurchaseFlow:true,
+        embedCommentCapture: turnToEmbedCommentCapture
     };
+
+    if(turnToEmbedCommentCapture){
+        document.write('<div id="TTcommentCapture"></div>');
+    }
 </script>
 
 <script type="text/javascript" src="//<?php echo $helper->getStaticHostWithoutProtocol(); ?>/tra<?php echo $helper->getVersionForPath()?>/turntoFeed.js"></script>

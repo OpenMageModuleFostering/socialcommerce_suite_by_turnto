@@ -20,24 +20,77 @@
         //imageStoreBase: 'wac.edgecastcdn.net/001A39/qa',
         setupType: "<?php echo Mage::getStoreConfig('turnto_admin/qa/qa_setup_type') ?>",
         reviewsSetupType: "<?php echo Mage::getStoreConfig('turnto_admin/reviews/reviews_setup_type') ?>"
-        <?php if (intval(Mage::getStoreConfig('turnto_admin/qa/qa_teaser_custom_enabled')) == 1): ?>
+        <?php if (intval(Mage::getStoreConfig('turnto_admin/qa/qa_teaser_custom_enabled')) == 1 && Mage::getStoreConfig('turnto_admin/qa/qa_teaser_type') == 'iTeaserFunc'): ?>
         ,iTeaserFunc: <?php echo Mage::getStoreConfig('turnto_admin/qa/qa_teaser_custom_function_name'); ?>
+        <?php elseif (intval(Mage::getStoreConfig('turnto_admin/qa/qa_teaser_custom_enabled')) == 1 && Mage::getStoreConfig('turnto_admin/qa/qa_teaser_type') != 'iTeaserFunc'): ?>
+        ,itemInputTeaserFunc: <?php echo Mage::getStoreConfig('turnto_admin/qa/qa_teaser_custom_function_name'); ?>
         <?php endif; ?>
         <?php if (intval(Mage::getStoreConfig('turnto_admin/reviews/reviews_teaser_custom_enabled')) == 1): ?>
         ,reviewsTeaserFunc: <?php echo Mage::getStoreConfig('turnto_admin/reviews/reviews_teaser_custom_function_name'); ?>
+        <?php endif; ?>
+        <?php if (intval(Mage::getStoreConfig('turnto_admin/checkoutcomments/checkoutcomments_display_enabled')) == 1): ?>
+        ,chatter: {
+            columns: <?php echo Mage::getStoreConfig('turnto_admin/checkoutcomments/cc_columns') == 'auto' ? "'auto'" : Mage::getStoreConfig('turnto_admin/checkoutcomments/cc_columns') ?>,
+            rowsInCollapsedView: <?php echo Mage::getStoreConfig('turnto_admin/checkoutcomments/cc_rows_collapsed') ?>,
+            rowsInExpandedView: <?php echo Mage::getStoreConfig('turnto_admin/checkoutcomments/cc_rows_expanded') ?>,
+            title: '<?php echo Mage::getStoreConfig('turnto_admin/checkoutcomments/cc_title') ?>',
+            expandText: '<?php echo Mage::getStoreConfig('turnto_admin/checkoutcomments/cc_expand_text') ?>',
+            collapsedText: '<?php echo Mage::getStoreConfig('turnto_admin/checkoutcomments/cc_collaped_text') ?>',
+            paginationPrevText: '<?php echo Mage::getStoreConfig('turnto_admin/checkoutcomments/cc_pagination_prev_text') ?>',
+            paginationNextText: '<?php echo Mage::getStoreConfig('turnto_admin/checkoutcomments/cc_pagination_next_text') ?>',
+            minimumCommentCount: <?php echo Mage::getStoreConfig('turnto_admin/checkoutcomments/cc_minimum_comment_count') ?>,
+            minimumCommentCharacterCount: <?php echo Mage::getStoreConfig('turnto_admin/checkoutcomments/cc_minimum_comment_character_count') ?>,
+            minimumCommentWordCount: <?php echo Mage::getStoreConfig('turnto_admin/checkoutcomments/cc_minimum_comment_word_count') ?>,
+            commentTruncateLength: <?php echo Mage::getStoreConfig('turnto_admin/checkoutcomments/cc_truncate_length') ?>,
+            includeSyndicated: <?php echo (Mage::getStoreConfig('turnto_admin/checkoutcomments/cc_include_syndicated') == 1 ? 'true' : 'false') ?>,
+            sortOrder: '<?php echo Mage::getStoreConfig('turnto_admin/checkoutcomments/cc_sort_order') ?>'
+        }
+        <?php endif; ?>
+        <?php if (intval(Mage::getStoreConfig('turnto_admin/vcgallery/vc_gallery_enabled')) == 1): ?>
+        ,gallery: {
+            title: "<?php echo Mage::getStoreConfig('turnto_admin/vcgallery/title') ?>",
+            size: "<?php echo Mage::getStoreConfig('turnto_admin/vcgallery/size') ?>",
+            modalSize: "<?php echo Mage::getStoreConfig('turnto_admin/vcgallery/modalSize') ?>",
+            showCaptionsInline: <?php echo Mage::getStoreConfig('turnto_admin/vcgallery/showCaptionsInline') == 1 ? 'true' : 'false'?>,
+            truncateLength: <?php echo Mage::getStoreConfig('turnto_admin/vcgallery/truncateLength') ?>,
+            minimumContentCount: <?php echo Mage::getStoreConfig('turnto_admin/vcgallery/minimumContentCount') ?>,
+            minimumTextContentCharacterCount: <?php echo Mage::getStoreConfig('turnto_admin/vcgallery/minimumTextContentCharacterCount') ?>,
+            minimumTextContentWordCount: <?php echo Mage::getStoreConfig('turnto_admin/vcgallery/minimumTextContentWordCount') ?>,
+            sortOrder: "<?php echo Mage::getStoreConfig('turnto_admin/vcgallery/sortOrder') ?>",
+        }
         <?php endif; ?>
     };
     (function () {
         var tt = document.createElement('script');
         tt.type = 'text/javascript';
         tt.async = true;
-        tt.src = "<?php echo Mage::getStoreConfig('turnto_admin/general/static_url')?>/traServer<?php echo $helper->getVersionForPath()?>/trajs/" + turnToConfig.siteKey + "/tra.js";
+        tt.src = "//<?php echo $helper->getStaticHostWithoutProtocol() ?>/traServer<?php echo $helper->getVersionForPath()?>/trajs/" + turnToConfig.siteKey + "/tra.js";
         var s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(tt, s);
     })();
 
+    <?php if (intval(Mage::getStoreConfig('turnto_admin/checkoutcomments/checkoutcomments_display_enabled')) == 1): ?>
+        var TurnToChatterSku = "<?php echo $TTSKU ?>";
+
+        (function() {
+            var tt = document.createElement('script'); tt.type = 'text/javascript'; tt.async=true;
+            tt.src = "//<?php echo $helper->getStaticHostWithoutProtocol() ?>/traServer<?php echo $helper->getVersionForPath()?>/chatterjs/" + turnToConfig.siteKey + "/turnto-chatter.js";
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(tt, s);
+        })();
+    <?php endif; ?>
+
+    <?php if (intval(Mage::getStoreConfig('turnto_admin/vcgallery/vc_gallery_enabled')) == 1): ?>
+        var TurnToGallerySkus = ['<?php echo $TTSKU ?>'];
+
+        (function() {
+            var tt = document.createElement('script'); tt.type = 'text/javascript'; tt.async=true;
+            tt.src = "//<?php echo $helper->getStaticHostWithoutProtocol() ?>/traServer<?php echo $helper->getVersionForPath()?>/galleryjs/" + turnToConfig.siteKey + "/turnto-gallery.js";
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(tt, s);
+        })();
+    <?php endif; ?>
+
     var TurnToItemSku = "<?php echo $TTSKU ?>";
 </script>
 
-<script type="text/javascript" src="<?php echo Mage::getStoreConfig('turnto_admin/general/static_url')?>/sitedata/<?php echo Mage::getStoreConfig('turnto_admin/general/site_key'); ?>/v4_2/<?php echo $TTSKU?>/d/itemjs"></script>
+<script type="text/javascript" src="<?php echo Mage::getStoreConfig('turnto_admin/general/static_url')?>/sitedata/<?php echo Mage::getStoreConfig('turnto_admin/general/site_key'); ?>/v<?php echo $helper->getVersionForPath()?>/<?php echo $TTSKU?>/d/itemjs"></script>
 

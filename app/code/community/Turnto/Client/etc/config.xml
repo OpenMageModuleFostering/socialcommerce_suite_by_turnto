@@ -3,7 +3,7 @@
 <config>
     <modules>
         <Turnto_Admin>
-            <version>3.0.5</version>
+            <version>3.1.0</version>
         </Turnto_Admin>
     </modules>
 
@@ -31,5 +31,15 @@
                 </checkout_cart_index>
             </updates>
         </layout>
+
+        <routers>
+            <turntopinboard>
+                <use>standard</use>
+                <args>
+                    <module>Turnto_Client</module>
+                    <frontName>pinboard</frontName>
+                </args>
+            </turntopinboard>
+        </routers>
     </frontend>
 </config>

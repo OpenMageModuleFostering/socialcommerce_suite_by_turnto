@@ -1,1 +1,5 @@
-<span class="TurnToItemTeaser"></span>
+<?php if (Mage::getStoreConfig('turnto_admin/qa/qa_teaser_type') == 'iTeaserFunc'): ?>
+    <span class="TurnToItemTeaser"></span>
+<?php else: ?>
+    <span class="TurnToItemInputTeaser"></span>
+<?php endif; ?>

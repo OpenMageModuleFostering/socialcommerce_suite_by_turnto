@@ -1,0 +1,37 @@
+<?php
+$helper = Mage::helper('turnto_client_helper/data');
+?>
+<script type="text/javascript">
+    var turnToConfig = {
+        siteKey: "<?php echo Mage::getStoreConfig('turnto_admin/general/site_key'); ?>",
+        host: "<?php echo $helper->getHostWithoutProtocol(); ?>",
+        staticHost: "<?php echo $helper->getStaticHostWithoutProtocol(); ?>",
+        pinboard: {
+            contentType: 'visualContent',
+
+            title: "<?php echo Mage::getStoreConfig('turnto_admin/vcpinboard/title')?>",
+            skus: <?php echo (Mage::getStoreConfig('turnto_admin/vcpinboard/skus') == '' ? 'null' : Mage::getStoreConfig('turnto_admin/vcpinboard/skus'))?>,
+            brands: <?php echo (Mage::getStoreConfig('turnto_admin/vcpinboard/brands') == '' ? 'null' : Mage::getStoreConfig('turnto_admin/vcpinboard/brands'))?>,
+            tags: <?php echo (Mage::getStoreConfig('turnto_admin/vcpinboard/tags') == '' ? 'null' : Mage::getStoreConfig('turnto_admin/vcpinboard/tags'))?>,
+            activeOnly: <?php echo (Mage::getStoreConfig('turnto_admin/vcpinboard/activeOnly') == '1' ? 'true' : 'false')?>,
+            showDatestamp: <?php echo (Mage::getStoreConfig('turnto_admin/vcpinboard/showDatestamp') == '1' ? 'true' : 'false')?>,
+            showCaption: <?php echo (Mage::getStoreConfig('turnto_admin/vcpinboard/showCaption') == '1' ? 'true' : 'false')?>,
+            minCaptionCharCount: <?php echo Mage::getStoreConfig('turnto_admin/vcpinboard/minCaptionCharCount')?>,
+            minCaptionWordCount: <?php echo Mage::getStoreConfig('turnto_admin/vcpinboard/minCaptionWordCount')?>,
+            maxCaptionLength: <?php echo Mage::getStoreConfig('turnto_admin/vcpinboard/maxCaptionLength')?>,
+            nameMaxLength: <?php echo (Mage::getStoreConfig('turnto_admin/vcpinboard/nameMaxLength') == '' ? 255 : Mage::getStoreConfig('turnto_admin/vcpinboard/nameMaxLength'))?>,
+            sortOrder: <?php echo Mage::getStoreConfig('turnto_admin/vcpinboard/sortOrder')?>,
+            limit: <?php echo (Mage::getStoreConfig('turnto_admin/vcpinboard/limit') == '' ? 20 : Mage::getStoreConfig('turnto_admin/vcpinboard/limit'))?>,
+            progressiveLoading: <?php echo (Mage::getStoreConfig('turnto_admin/vcpinboard/progressiveLoading') == '1' ? 'true' : 'false')?>,
+            hSpacing: <?php echo (Mage::getStoreConfig('turnto_admin/vcpinboard/hSpacing') == '' ? 8 : Mage::getStoreConfig('turnto_admin/vcpinboard/hSpacing'))?>,
+            vSpacing: <?php echo (Mage::getStoreConfig('turnto_admin/vcpinboard/vSpacing') == '' ? 8 : Mage::getStoreConfig('turnto_admin/vcpinboard/vSpacing'))?>
+        }
+    };
+
+    (function() {
+        var tt = document.createElement('script');
+        tt.type = 'text/javascript'; tt.async = true;
+        tt.src = "//<?php echo $helper->getStaticHostWithoutProtocol() ?>/traServer<?php echo $helper->getVersionForPath()?>/pinboardjs/" + turnToConfig.siteKey + "/turnto-pinboard.js";
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(tt, s);
+    })();
+</script>

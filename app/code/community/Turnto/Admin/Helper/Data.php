@@ -222,7 +222,10 @@ class Turnto_Admin_Helper_Data extends Mage_Core_Helper_Data
                     fwrite($handle, $itemlineid++);
                     fwrite($handle, "\t");
                     //ZIP
-                    fwrite($handle, $order->getShippingAddress()->getPostcode());
+                    $shippingAddress = $order->getShippingAddress();
+                    if ($shippingAddress){
+                        fwrite($handle, $shippingAddress->getPostcode());
+                    }
                     fwrite($handle, "\t");
                     //FIRSTNAME
                     $name = explode(' ', $order->getCustomerName());

@@ -3,7 +3,7 @@
 <config>
     <modules>
         <Turnto_Admin>
-            <version>3.0.5</version>
+            <version>3.1.0</version>
         </Turnto_Admin>
     </modules> 
 
@@ -144,6 +144,8 @@
                 <image_store_base>wac.edgecastcdn.net/001A39/prod</image_store_base>
                 <static_cache_time>900</static_cache_time>
                 <teaser_cache_time>900</teaser_cache_time>
+                <cc_display_cache_time>900</cc_display_cache_time>
+                <vcgallery_cache_time>900</vcgallery_cache_time>
                 <version>4.3</version>
                 <upc_attribute nil="true"/>
                 <mpn_attribute nil="true"/>
@@ -155,10 +157,26 @@
             </general>
             <checkoutcomments>
                 <checkoutcomments_enabled>1</checkoutcomments_enabled>
+                <checkoutcomments_display_enabled>0</checkoutcomments_display_enabled>
+                <cc_columns>auto</cc_columns>
+                <cc_rows_collapsed>1</cc_rows_collapsed>
+                <cc_rows_expanded>4</cc_rows_expanded>
+                <cc_title>Why I Chose This:</cc_title>
+                <cc_expand_text>Read More</cc_expand_text>
+                <cc_collaped_text>Read Less</cc_collaped_text>
+                <cc_pagination_prev_text>Previous</cc_pagination_prev_text>
+                <cc_pagination_next_text>Next</cc_pagination_next_text>
+                <cc_minimum_comment_count>4</cc_minimum_comment_count>
+                <cc_minimum_comment_character_count>20</cc_minimum_comment_character_count>
+                <cc_minimum_comment_word_count>3</cc_minimum_comment_word_count>
+                <cc_truncate_length>200</cc_truncate_length>
+                <cc_include_syndicated>1</cc_include_syndicated>
+                <cc_sort_order>Most Recent</cc_sort_order>
             </checkoutcomments>
             <qa>
                 <qa_setup_type>overlay</qa_setup_type>
                 <qa_teaser_custom_enabled>1</qa_teaser_custom_enabled>
+                <qa_teaser_type>iTeaserFunc</qa_teaser_type>
                 <qa_teaser_custom><![CDATA[
 <script type="text/javascript">
   /**
@@ -187,7 +205,7 @@
 
    // todo: this should handle opening the tab if Q&A is under a tab.
    function clickQaTabFromTeaser() {
-       var qa = TurnTojQuery('#TurnToContent')
+       var qa = jQuery('#TurnToContent')
        window.scrollTo(0,qa.offset().top);
    }
 </script>
@@ -206,7 +224,7 @@
     function reviewsItemTeaserDisplay(clazz, data) {
         var clazzNam = clazz || "TurnToReviewsTeaser";
 
-        var iteasers = TurnTojQuery("." + clazzNam);
+        var iteasers = jQuery("." + clazzNam);
 
         // round the average rating to the nearest tenth
         var rating = Math.round((TurnToItemData.counts.ar + 0.25) * 100.0) / 100.0;
@@ -225,13 +243,62 @@
 
     // todo: this should handle opening the tab if reviews are under a tab AND scrolling to the content
     function clickReviewsTabFromTeaser() {
-        var rev = TurnTojQuery('#TurnToReviewsContent')
+        var rev = jQuery('#TurnToReviewsContent')
         window.scrollTo(0,rev.offset().top);
     }
 </script>
                 ]]></reviews_teaser_custom>
                 <reviews_teaser_custom_function_name>reviewsItemTeaserDisplay</reviews_teaser_custom_function_name>
             </reviews>
+            <vcgallery>
+                    <vc_gallery_enabled>0</vc_gallery_enabled>
+                    <title>Customer Gallery</title>
+                    <size>small</size>
+                    <modalSize>small</modalSize>
+                    <showCaptionsInline>0</showCaptionsInline>
+                    <truncateLength>40</truncateLength>
+                    <minimumContentCount>1</minimumContentCount>
+                    <minimumTextContentCharacterCount>0</minimumTextContentCharacterCount>
+                    <minimumTextContentWordCount>0</minimumTextContentWordCount>
+                    <sortOrder>mostvotes</sortOrder>
+            </vcgallery>
+            <vcpinboard>
+                <enabled>0</enabled>
+                <title>Customer Gallery</title>
+                <skus></skus>
+                <brands></brands>
+                <tags></tags>
+                <activeOnly>0</activeOnly>
+                <showDatestamp>1</showDatestamp>
+                <showCaption>1</showCaption>
+                <minCaptionCharCount>0</minCaptionCharCount>
+                <minCaptionWordCount>0</minCaptionWordCount>
+                <maxCaptionLength>85</maxCaptionLength>
+                <nameMaxLength>255</nameMaxLength>
+                <sortOrder>0</sortOrder>
+                <limit>20</limit>
+                <progressiveLoading>1</progressiveLoading>
+                <hSpacing>8</hSpacing>
+                <vSpacing>8</vSpacing>
+            </vcpinboard>
+            <ccpinboard>
+                <enabled>0</enabled>
+                <title>Customer Comments</title>
+                <skus></skus>
+                <brands></brands>
+                <tags></tags>
+                <activeOnly>0</activeOnly>
+                <includeSyndicated>0</includeSyndicated>
+                <titleMaxLength>255</titleMaxLength>
+                <maxDaysOld>30</maxDaysOld>
+                <maxCommentsPerBox>5</maxCommentsPerBox>
+                <nameMaxLength>255</nameMaxLength>
+                <commentMaxLength>200</commentMaxLength>
+                <limit>20</limit>
+                <progressiveLoading>1</progressiveLoading>
+                <hSpacing>8</hSpacing>
+                <vSpacing>8</vSpacing>
+            </ccpinboard>
         </turnto_admin>
     </default>   
     <crontab>
