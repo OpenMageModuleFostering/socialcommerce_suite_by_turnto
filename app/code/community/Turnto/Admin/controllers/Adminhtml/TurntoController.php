@@ -1,23 +1,14 @@
 <?php
 
-class Turnto_Admin_AdminControllers_TurntoController extends Mage_Adminhtml_Controller_Action
+class Turnto_Admin_Adminhtml_TurntoController extends Mage_Adminhtml_Controller_Action
 {
 	public function indexAction()
 	{
 		$this->loadLayout();
 		
 		$resource = Mage::getSingleton('core/resource');
-		$storeList = array();
-                foreach (Mage::app()->getWebsites() as $website) {
- 			foreach ($website->getGroups() as $group) {
-        			$stores = $group->getStores();
-        			foreach ($stores as $store) {
-            				array_push($storeList, $store);
-        			}
-    			}
-		}
 
-		Mage::register('sites', $storeList);
+		Mage::register('websites', Mage::app()->getWebsites());
 		
 		$this->_addLeft($this->getLayout()->createBlock('Turnto_Admin_Block_ShowTabsAdminBlock'));
 		
@@ -29,6 +20,16 @@ class Turnto_Admin_AdminControllers_TurntoController extends Mage_Adminhtml_Cont
 		$this->_redirectUrl('http://www.turnto.com');
 	}
 	
+	public function ratingsAction()
+    {
+ 
+         Mage::helper('adminhelper1')->loadRatings();
+         $message = $this->__('Products Ratings successfully updated.');
+         Mage::getSingleton('adminhtml/session')->addSuccess($message);
+         $this->_redirect('*/*/', array('active_tab' => 'turnto_ratings_feed_tab'));
+  	  
+    }
+
 	public function postAction()
     {
         $post = $this->getRequest()->getPost();
@@ -53,55 +54,83 @@ class Turnto_Admin_AdminControllers_TurntoController extends Mage_Adminhtml_Cont
 				}
 
 				$scope = $post['scope'];
-				$baseUrl =  Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK); 
-				$baseMediaUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'catalog/product';
-				if(isset($scope)){
-					$baseUrl = Mage::app()->getStore($scope)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
-   					$baseMediaUrl = Mage::app()->getStore($scope)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'catalog/product';
-				}
-				
-				$resource = Mage::getSingleton('core/resource');     
-				$readConnection = $resource->getConnection('core_read');
-	
-				$stmt = $readConnection->prepare(
-					'select sales_flat_order.entity_id as orderid, '
-       						.'sales_flat_order_item.created_at as orderdate, '
-       						.'customer_email as email, '
-       						.'ifnull(parent.name, sales_flat_order_item.name) as itemtitle, ' 
-       						.'concat('.$readConnection->quote($baseUrl).', ifnull(parent.url_path, catalog_product_flat_1.url_path)) as itemurl, '
-       						.'item_id as itemlineid, '
-       						.'postcode as zip, '
-     						.'customer_firstname as firstname, '
-       						.'customer_lastname as lastname, '
-       						.'ifnull(parent.sku, sales_flat_order_item.sku) as sku, '
-       						.'grand_total as price, '
-       						.'concat('.$readConnection->quote($baseMediaUrl).', ifnull(parent.small_image, catalog_product_flat_1.small_image)) as itemimageurl '
-     					.'from sales_flat_order,'
-       						.'sales_flat_order_item, '
-       						.'sales_flat_order_address, '       
-       						.'catalog_product_flat_1 '
-       						.'left join catalog_product_super_link on catalog_product_flat_1.entity_id = catalog_product_super_link.product_id '
-      						.'left join catalog_product_flat_1 as parent on catalog_product_super_link.parent_id = parent.entity_id '
-     					.'where sales_flat_order.entity_id = sales_flat_order_item.order_id '
-       						.'and sales_flat_order.entity_id = sales_flat_order_address.parent_id '
-       						.'and sales_flat_order_item.product_id = catalog_product_flat_1.entity_id '
-       						.'and sales_flat_order_item.created_at > str_to_date(\''.$startDate.'\', \'%m/%d/%Y\')', array(PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL));
-				$stmt->execute();
-
 				$handle = fopen($path . 'histfeed.csv', 'w');
+
+				if (!$handle) {
+					Mage::throwException($this->__('Could not create historical feed file in directory ' . $path));
+				}
 				
 				fwrite($handle, "ORDERID\tORDERDATE\tEMAIL\tITEMTITLE\tITEMURL\tITEMLINEID\tZIP\tFIRSTNAME\tLASTNAME\tSKU\tPRICE\tITEMIMAGEURL");
 				fwrite($handle, "\n");
-				
-				while ($row = $stmt->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT)) {
-					foreach($row as $column){
-						fwrite($handle, str_replace("\t", "\\t", $column));
-						fwrite($handle, "\t");
+			
+				$fromDate = date('Y-m-d H:i:s', strtotime($startDate));
+				Mage::app();	
+				$orders = Mage::getModel('sales/order')
+				->getCollection()
+				->addFieldToFilter('store_id', $scope)
+				->addAttributeToFilter('created_at', array('from'=>$fromDate))
+				->addAttributeToSort('entity_id', 'DESC')
+				->setPageSize(100);
+
+				$pages = $orders->getLastPageNumber();
+
+				for ($curPage = 1; $curPage <= $pages; $curPage++) {
+					$orders->setCurPage($curPage);
+					$orders->load();
+					foreach ($orders as $order) {
+						$itemlineid = 0;
+						foreach ($order->getAllVisibleItems() as $item) {
+							//ORDERID
+							fwrite($handle, $order->getRealOrderId());
+							fwrite($handle, "\t");
+							//ORDERDATE
+							fwrite($handle, $order->getCreatedAtDate()->toString('Y-MM-d'));
+							fwrite($handle, "\t");
+							//EMAIL
+							fwrite($handle, $order->getCustomerEmail());
+							fwrite($handle, "\t");
+							//ITEMTITLE
+							fwrite($handle, $item->getName());
+							fwrite($handle, "\t");
+							//ITEMURL
+							$product = $item->getProduct();
+							fwrite($handle, $product->getProductUrl());
+							fwrite($handle, "\t");
+							//ITEMLINEID
+							fwrite($handle, $itemlineid++);
+							fwrite($handle, "\t");
+							//ZIP
+							fwrite($handle, $order->getShippingAddress()->getPostcode());
+							fwrite($handle, "\t");
+							//FIRSTNAME
+							$name = explode(' ', $order->getCustomerName());
+							fwrite($handle, $name[0]);
+							fwrite($handle, "\t");
+							//LASTNAME
+							if (isset($name[1])) {
+								fwrite($handle, $name[1]);
+							}
+							fwrite($handle, "\t");
+							//SKU
+							fwrite($handle, $item->getSku());
+							fwrite($handle, "\t");
+							//PRICE
+							fwrite($handle, $item->getOriginalPrice());
+							fwrite($handle, "\t");
+							//ITEMIMAGEURL
+							if ($product->getImage() != null && $product->getImage() != "no_selection") {
+								fwrite($handle, Mage::getModel('catalog/product_media_config')->getMediaUrl($product->getImage()));
+							} else if ($product->getSmallImage() != null && $product->getSmallImage() != "no_selection") {
+								fwrite($handle, Mage::getModel('catalog/product_media_config')->getMediaUrl($product->getSmallImage()));
+							} else if ($product->getThumbnail() != null && $product->getThumbnail() != "no_selection") {
+								fwrite($handle, Mage::getModel('catalog/product_media_config')->getMediaUrl($product->getThumbnail()));
+							}
+							fwrite($handle, "\n");
+						}
 					}
-					
-					fwrite($handle, "\n");
+					$orders->clear();
 				}
-				$stmt = null;
+				
 				fclose($handle); 
 							
 				$message = $this->__('The historical feed was successfully generated. Click the &quot;Download historical feed&quot; link to download.');
@@ -109,24 +138,33 @@ class Turnto_Admin_AdminControllers_TurntoController extends Mage_Adminhtml_Cont
             }
             else{
             	/* form processing */        
-				$scope = $post['scope'];
-				
+				$websiteId = $post['websiteId'];
+				$storeId = 1;				
+				if (isset($websiteId)) {
+					$split = explode('_', $websiteId);
+					$websiteId = $split[0];
+					$storeId = $split[1];
+				} else {
+					$websiteId = 1;
+				}
+
 				$baseUrl =  Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
                                 $baseMediaUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'catalog/product';
-                                if(isset($scope)){
-                                        $baseUrl = Mage::app()->getStore($scope)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
-                                        $baseMediaUrl = Mage::app()->getStore($scope)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'catalog/product';
-                                }
+                                if(!isset($storeId)){
+					$storeId = 1;
+				}
+                                $baseUrl = Mage::app()->getStore($storeId)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK);
+                                $baseMediaUrl = Mage::app()->getStore($storeId)->getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA).'catalog/product';
 
 				$handle = fopen($path . 'catfeed.csv', 'w');
 				
 				fwrite($handle, "SKU\tIMAGEURL\tTITLE\tPRICE\tCURRENCY\tACTIVE\tITEMURL\tCATEGORY\tKEYWORDS\tREPLACEMENTSKU\tINSTOCK\tVIRTUALPARENTCODE\tCATEGORYPATHJSON\tISCATEGORY");
 				fwrite($handle, "\n");
 			
-                		$products = Mage::getModel('catalog/product')->setStoreId($scope)->getCollection()->addAttributeToSelect('name')->addAttributeToSelect('*')->addAttributeToSelect('price')->addAttributeToSelect('image');
+                		$products = Mage::getModel('catalog/product')->setStoreId($storeId)->getCollection()->addAttributeToSelect('name')->addAttributeToSelect('*')->addAttributeToSelect('price')->addAttributeToSelect('image')->addWebsiteFilter($websiteId);
 				if ($products) {
                         		foreach ($products as $product) {
-                                		$product->setStoreId($scope);
+                                		$product->setStoreId($storeId);
                                 		fwrite($handle, $product->getSku());
                                 		fwrite($handle, "\t");
  						if($product->getImage() != null && $product->getImage() != "no_selection") {
@@ -167,13 +205,13 @@ class Turnto_Admin_AdminControllers_TurntoController extends Mage_Adminhtml_Cont
                         		}
                 		}	
 				
-				$categories = Mage::getModel('catalog/category')->setStoreId($scope)->getCollection()->addAttributeToSelect('name');
+				$categories = Mage::getModel('catalog/category')->setStoreId($storeId)->getCollection()->addAttributeToSelect('name');
                 		if ($categories) {
                         		foreach ($categories as $category) {
                                 		if ($category->getId() == 1) {
 							continue;
 						}
-						$category->setStoreId($scope);
+						$category->setStoreId($storeId);
                                 		fwrite($handle, $category->getId());
                                 		fwrite($handle, "\t");
 						//IMAGEURL

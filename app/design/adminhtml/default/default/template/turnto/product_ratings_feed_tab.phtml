@@ -2,7 +2,7 @@
 <p style="margin-top:10px;width:600px">
 
  
-The product ratings feed contains the average rating and review count for each product.  This feed can be automatically consumed by the TurnTo extension.  Once the feed is consumed, the average ratings and review counts will be stored in the database and available to be placed in the search results or where ever else you may wish to put them.
+This TurnTo Magento Extension can automate the process of retrieving the SKU average rating feed.  Click on the configure link below to set it up.
 <br>
 <br>
 
@@ -37,11 +37,11 @@ The product ratings feed contains the average rating and review count for each p
 <form id="ratings_feed_form" name="ratings_feed_form" method="post" action="<?php echo $this->getBaseUrl().'admin/system_config/edit/section/turnto_admin/' ?>">
 	<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
 <h4 style="margin-top:20px">Feed Configuration</h4>
-<p style="width:600px">Feed is not active. To configure the feed, please 
-<input id="submit" name="submit" value="Configure" type="submit" /></td>
+<span>Feed is not active. </span> <input id="submit" name="submit" value="Configure" type="submit" />
 </form>
 
 <?php endif; ?>
 
+
 <br /><br />
-</p>
+

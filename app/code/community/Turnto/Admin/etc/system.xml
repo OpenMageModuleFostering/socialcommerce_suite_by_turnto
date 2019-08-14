@@ -17,7 +17,7 @@
             <label>Products Ratings Feed</label>
             <tab>turnto_extensions</tab>
             <frontend_type>text</frontend_type>
-            <sort_order>1</sort_order>
+            <sort_order>261</sort_order>
             <show_in_default>1</show_in_default>
             <show_in_website>1</show_in_website>
             <show_in_store>1</show_in_store>
@@ -37,8 +37,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            
-                        </feed_activation> 
+                        </feed_activation>
                         <url translate="label">
                             <label>Products Ratings Feed url*</label>
                             <frontend_type>text</frontend_type>
@@ -47,7 +46,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <validate>required-entry</validate>
-                        </url> 
+                        </url>
                         <site_key translate="label">
                             <label>Site Key*</label>
                             <frontend_type>text</frontend_type>
@@ -56,7 +55,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <validate>required-entry</validate>
-                        </site_key> 
+                        </site_key>
                         <site_auth translate="label">
                             <label>Authorization Key*</label>
                             <frontend_type>text</frontend_type>
@@ -65,21 +64,22 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <validate>required-entry</validate>
-                        </site_auth> 
+                        </site_auth>
+                        <!--
                         <enabled translate="label">
-                            <label>Enable TurnTo Products Ratings</label>
+                            <label>Show Turnto Products Ratings</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>40</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>When set to Yes, the TurnTo average rating feed will be consumed on a scheduled basis.</comment>
-                        </enabled> 
-
+                            <comment>When set to Yes, Turnto products ratings will be shown.</comment>
+                        </enabled>
+                        -->
                     </fields>
                  </feedconfig>
-                 
+
             </groups>
             
         </turnto_admin>

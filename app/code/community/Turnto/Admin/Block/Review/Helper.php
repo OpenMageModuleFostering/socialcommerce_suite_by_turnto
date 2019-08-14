@@ -1,35 +1,18 @@
 <?php
 /**
- * Magento Enterprise Edition
  *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Magento Enterprise Edition License
- * that is bundled with this package in the file LICENSE_EE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://www.magentocommerce.com/license/enterprise-edition
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade Magento to newer
- * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
- *
- * @category    Mage
- * @package     Mage_Review
- * @copyright   Copyright (c) 2013 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://www.magentocommerce.com/license/enterprise-edition
+ * @category    Turnto
+ * @package     Turnto_Admin
+ * @copyright   
+ * @license     
  */
 
 /**
  * Review helper
  *
- * @category   Mage
- * @package    Mage_Review
- * @author     Magento Core Team <core@magentocommerce.com>
+ * @category    Turnto
+ * @package     Turnto_Admin
+ * @author      nanowebgroup.com
  */
 class Turnto_Admin_Block_Review_Helper extends Mage_Review_Block_Helper
 {
@@ -38,52 +21,51 @@ class Turnto_Admin_Block_Review_Helper extends Mage_Review_Block_Helper
 
     public function getRatingSummary()
     {
-        
-        if(Mage::getStoreConfig('turnto_admin/feedconfig/enabled')){
+     // if(Mage::getStoreConfig('turnto_admin/feedconfig/enabled')){
             
-             $rating = $this->_getTurntoRating();
-               return $rating->getRating()*20;
+          
+               $rating = $this->_getTurntoRating();
+               $rating_value = is_numeric($rating->getRating()) && (double)$rating->getRating() > 0 ? $rating->getRating() : 0;
+               
+               return $rating_value*20;
 
-        }else{
-            //return $this->getProduct()->getRatingSummary()->getRatingSummary();
-            return parent::getRatingSummary();
-        }
+        // }else{
+       //     return parent::getRatingSummary();
+        // }
 
-        
-    }
+   }
 
     public function getReviewsCount()
     {
         
-         if(Mage::getStoreConfig('turnto_admin/feedconfig/enabled')){
+    
+        // if(Mage::getStoreConfig('turnto_admin/feedconfig/enabled')){
 
+           
               $rating = $this->_getTurntoRating();
+           
               if($rating->getReviewCount()){
-
+                 
                   return $rating->getReviewCount();
               }else{
-
+                 
                   return 0;
               }
 
-         }else{
-              //return $this->getProduct()->getRatingSummary()->getReviewsCount();
-             return parent::getReviewsCount();
-         }
+       //  }else{
+       //    return parent::getReviewsCount();
+        // }
     }
 
     protected function _getTurntoRating()
     {
-         if($this->_turnto_rating)
-            return $this->_turnto_rating;
-
-         $this->_turnto_rating = Mage::getModel('turnto_admin/rating')
+         
+         return Mage::getModel('turnto_admin/rating')
                                   ->getCollection()
                                   ->addFieldToFilter('product_id', $this->getProduct()->getId())
                                   ->getFirstItem();
          
-
-         return $this->_turnto_rating;
+        
     }
 
 }
