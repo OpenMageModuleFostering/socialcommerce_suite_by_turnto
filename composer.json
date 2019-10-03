@@ -1,16 +1,19 @@
 {
-    "name": "OpenMageModuleFostering/socialcommerce_suite_by_turnto",
+    "name": "OpenMageModuleFostering\/socialcommerce_suite_by_turnto",
     "type": "magento-module",
     "license": "MIT",
     "homepage": "",
     "description": "Connect your shoppers to your customers",
     "authors": [
-    {
-        "name": "TurnTo",
-        "email": "contact@turnto.com"
-    }
-],
+        {
+            "name": "TurnTo",
+            "email": "contact@turnto.com"
+        }
+    ],
     "suggest": {
-        "magento-hackathon/magento-composer-installer": "*"
-    }
+        "magento-hackathon\/magento-composer-installer": "*"
+    },
+    "keywords": [
+        "openmage-module"
+    ]
 }
